@@ -8,7 +8,7 @@ Original code Copyright [Waylan Limberg](http://achinghead.com/).
 
 All changes of base code Copyright The Python Markdown Project
 
-Additional changes Copyright [Michael Back](https://github.com/mhcoma).
+Additional changes Copyright 2023 [Michael Back](https://github.com/mhcoma).
 
 License: [BSD](https://opensource.org/licenses/bsd-license.php)
 
