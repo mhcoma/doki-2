@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			{{ title }} - {{ settings.wikiname }}
+		</title>
+		<meta charset = "utf-8">
+		<link rel = "stylesheet" href = "{{ url_for('static', path = '/modern/style.css?v=1.0')}}">
+
+		<script>
+			MathJax = {
+				tex : {
+					inlineMath: [['$$$', '$$$']],
+					displayMath: [['$$', '$$']]
+				},
+				options : {
+					renderActions: {
+						addMenu: []
+					}
+				}
+			};
+		</script>
+		<script type = "text/javascript" id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+		<script type = "text/javascript" src = "https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+		<script src = "{{ url_for('static', path = 'modern/script.js') }}"></script>
+
+		<meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+	</head>
+	<body>
+		<header>
+			<div id = "header_center">
+				<div id = "header_center_inner">
+					<div id = "header_title_box">
+						<div id = "header_title_text">
+							<a href = "/">{{ settings.wikiname }}</a>
+						</div>
+						<button name = "" class = "btn_header" id = "header_menu_btn" onclick = "toggle_menu()"><img src = "{{ url_for('static', path = 'modern/symbol_menu.svg') }}"/></button>
+					</div>
+					<div id = "header_menu_box">
+						<div id = "header_menu_btn_shadow"></div>
+					</div>
+					<form id = "header_search_form" method = "get" action = "/search-go/">
+						<div id = "header_search_box">
+							<input type = "search" name = "search" id = "header_search_bar">
+							<div id = "header_search_button_box">
+								<input type = "submit" value = "enter" style = "display: none;">
+								<button class = "btn_header" onclick="location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
+								<button class = "btn_header" onclick="location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</header>
+		<section>
+			<div id = "section_center">
+				<div id = "section_center_inner">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+		</section>
+		<footer>
+
+		</footer>
+	</body>
+</html>
