@@ -3,6 +3,7 @@ import json
 import os
 
 import fastapi
+import starlette.middleware.sessions
 
 import core
 
@@ -65,6 +66,10 @@ class User:
 		if not result:
 			return False
 
-		request.session["username"] = self.username
-		request.session["is_admin"] = self.is_admin
+		starlette.middleware.sessions
+
+		session = request.session
+		session["username"] = self.username
+		session["is_admin"] = self.is_admin
+
 		return True

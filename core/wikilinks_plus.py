@@ -13,14 +13,14 @@ Additional changes Copyright 2023 [Michael Back](https://github.com/mhcoma).
 License: [BSD](https://opensource.org/licenses/bsd-license.php)
 
 '''
-
+import markdown
 from markdown import Extension
 from markdown.inlinepatterns import InlineProcessor
 import xml.etree.ElementTree as etree
 import re
 import os
 
-import core
+import typing
 
 def build_url(text, base, end):
 # def build_url(label):
@@ -68,7 +68,7 @@ class WikiLinkPlusExtension(Extension):
 class WikiLinksPlusInlineProcessor(InlineProcessor):
 	def __init__(self, pattern, config):
 		super().__init__(pattern)
-		self.config = config
+		self.config: dict[str, typing.Any] = config
 
 	def handleMatch(self, m, data):
 		if m.group(1).strip():
@@ -79,8 +79,6 @@ class WikiLinksPlusInlineProcessor(InlineProcessor):
 
 			# url = self.config['build_url'](label, base_url, end_url)
 			result = self.config['build_url'](text, base_url, end_url)
-
-			print(result)
 
 			url = result[0]
 
@@ -109,16 +107,17 @@ class WikiLinksPlusInlineProcessor(InlineProcessor):
 		not_exist_class = self.config['not_exist_class']
 
 		if hasattr(self.md, 'Meta'):
-			if 'wiki_base_url' in self.md.Meta:
-				base_url = self.md.Meta['wiki_base_url'][0]
-			if 'wiki_end_url' in self.md.Meta:
-				end_url = self.md.Meta['wiki_end_url'][0]
+			meta = getattr(self.md, 'Meta')
+			if 'wiki_base_url' in meta:
+				base_url = meta['wiki_base_url'][0]
+			if 'wiki_end_url' in meta:
+				end_url = meta['wiki_end_url'][0]
 			# if 'wiki_html_class' in self.md.Meta:
 			# 	html_class = self.md.Meta['wiki_html_class'][0]
-			if 'wiki_exist_class' in self.md.Meta:
-				exist_class = self.md.Meta['wiki_exist_class'][0]
-			if 'wiki_not_exist_class' in self.md.Meta:
-				not_exist_class = self.md.Meta['wiki_not_exist_class'][0]
+			if 'wiki_exist_class' in meta:
+				exist_class = meta['wiki_exist_class'][0]
+			if 'wiki_not_exist_class' in meta:
+				not_exist_class = meta['wiki_not_exist_class'][0]
 
 		# return base_url, end_url, html_class
 		return base_url, end_url, exist_class, not_exist_class

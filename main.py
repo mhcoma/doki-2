@@ -3,7 +3,6 @@ import fastapi.responses
 import fastapi.staticfiles
 import fastapi.templating
 import starlette.middleware.sessions
-import uvicorn
 
 import core.article
 import core.setting
@@ -17,8 +16,7 @@ app.mount("/static", fastapi.staticfiles.StaticFiles(directory = "static"), name
 
 app.add_middleware(
 	starlette.middleware.sessions.SessionMiddleware,
-	secret_key = "asdf",
-	https_only = True
+	secret_key = "asdf"
 )
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
@@ -26,8 +24,6 @@ async def view(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 	article.convert_markdown()
-
-	print(request.session)
 
 	context = dict()
 	context['request'] = request
@@ -85,17 +81,51 @@ async def delete(request: fastapi.Request, title: str):
 	article.delete()
 	return f"/view/{title}"
 
-
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
 async def login(request: fastapi.Request):
 	context = dict()
 	context['request'] = request
 	context['title'] = "Login"
 	context['settings'] = settings
-	
+
+	http_referer = request.headers['referer']
+
+	request.session['referer'] = http_referer
+
 	response = templates.TemplateResponse(f"{settings.skin}/login.html", context)
 
 	return response
+
+@app.post("/login-submit/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
+async def login_submit(
+	response: fastapi.Response,
+	request: fastapi.Request,
+	username: str = fastapi.Form(),
+	password: str = fastapi.Form()
+):
+	user = core.user.User(username)
+	user.login(password, request)
+
+	redirect_url = request.session['referer']
+
+	if not redirect_url:
+		return "/"
+
+	request.session.pop('referer', None)
+
+	return redirect_url
+
+@app.get("/logout/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
+async def logout(request: fastapi.Request):
+
+	redirect_url = request.headers['referer']
+	request.session.pop('username', None)
+	request.session.pop('is_admin', None)
+	
+	if not redirect_url:
+		return "/"
+
+	return redirect_url
 
 @app.get("/join/", response_class = fastapi.responses.HTMLResponse)
 async def join(request: fastapi.Request):
@@ -124,22 +154,7 @@ async def join_submit(
 
 	return "/join/"
 
-@app.post("/login-submit/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def login_submit(
-	response: fastapi.Response,
-	request: fastapi.Request,
-	username: str = fastapi.Form(),
-	password: str = fastapi.Form()
-):
-	user = core.user.User(username)
-	user.login(password, request)
-
-	return "/"
-
 @app.get("/", response_class = fastapi.responses.RedirectResponse, status_code = 308)
 async def root(request: fastapi.Request):
 	title = settings.mainpage
 	return f"/view/{title}"
-
-if __name__ == "__main__":
-	uvicorn.run(app, host = "172.30.1.52", port = 8000, log_level = "info")
