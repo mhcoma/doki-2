@@ -1,5 +1,3 @@
-import hashlib
-
 import fastapi
 import fastapi.responses
 import fastapi.staticfiles
@@ -59,7 +57,12 @@ async def edit_save(
 	title: str,
 	raw_data: str = fastapi.Form(None)
 ):
-	user = request.client.host
+
+	client = request.client
+	if not client is None:
+		user = client.host
+	else:
+		user = "Unknown"
 
 	article = core.article.Article(title)
 	article.load()
