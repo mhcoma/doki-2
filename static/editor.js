@@ -23,8 +23,8 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 		selected = empty_replace;
 	}
 
-	front_length = token_front.length;
-	back_length = token_back.length;
+	let front_length = token_front.length;
+	let back_length = token_back.length;
 
 	switch (position) {
 		case 0: {
