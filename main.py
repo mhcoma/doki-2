@@ -2,8 +2,8 @@ import fastapi
 import fastapi.responses
 import fastapi.staticfiles
 import fastapi.templating
-
 import starlette.middleware.sessions
+import uvicorn
 
 import core.article
 import core.setting
@@ -15,7 +15,11 @@ app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
 app.mount("/static", fastapi.staticfiles.StaticFiles(directory = "static"), name = "static")
 
-app.add_middleware(starlette.middleware.sessions.SessionMiddleware, secret_key = "asdf")
+app.add_middleware(
+	starlette.middleware.sessions.SessionMiddleware,
+	secret_key = "asdf",
+	https_only = True
+)
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
 async def view(request: fastapi.Request, title: str):
@@ -136,3 +140,6 @@ async def login_submit(
 async def root(request: fastapi.Request):
 	title = settings.mainpage
 	return f"/view/{title}"
+
+if __name__ == "__main__":
+	uvicorn.run(app, host = "172.30.1.52", port = 8000, log_level = "info")
