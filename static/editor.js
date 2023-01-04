@@ -1,11 +1,11 @@
-var editor_section_box;
-var editor_button_section_focused;
+let editor_section_box;
+let editor_button_section_focused;
 
-var editor_link_target;
-var editor_link_display;
-var editor_link_radio;
+let editor_link_target;
+let editor_link_display;
+let editor_link_radio;
 
-var keydown_shift = false;
+let keydown_shift = false;
 
 $(window).on('load', function() {
 	editor_section_box = $('#editor_section_box')[0];
@@ -16,9 +16,9 @@ $(window).on('load', function() {
 });
 
 function editor_select_insert_pair(token_front, token_back, empty_replace, position, select_again) {
-	var start = edit_area.selectionStart;
-	var end = edit_area.selectionEnd;
-	var selected = edit_area.value.substring(start, end);
+	let start = edit_area.selectionStart;
+	let end = edit_area.selectionEnd;
+	let selected = edit_area.value.substring(start, end);
 	if (start == end) {
 		selected = empty_replace;
 	}
@@ -70,16 +70,16 @@ function editor_select_insert_single(token_text, empty_replace, position, select
 }
 
 function editor_get_select_block() {
-	var selection_start = edit_area.selectionStart;
-	var selection_end = edit_area.selectionEnd;
-	var edit_end = edit_area.value.length;
-	block_start = selection_start;
+	let selection_start = edit_area.selectionStart;
+	let selection_end = edit_area.selectionEnd;
+	let edit_end = edit_area.value.length;
+	let block_start = selection_start;
 	if (edit_area.value.charAt(block_start) == '\n') block_start--;
 	while (edit_area.value.charAt(block_start) != '\n' && block_start != 0) block_start--;
 	if (block_start != 0) block_start++;
-	block_end = selection_end;
+	let block_end = selection_end;
 	while (edit_area.value.charAt(block_end) != '\n' && block_end != edit_end) block_end++;
-	block_text = edit_area.value.substring(block_start, block_end);
+	let block_text = edit_area.value.substring(block_start, block_end);
 
 	return {
 		ss: selection_start,
@@ -102,13 +102,13 @@ function editor_set_select_block(select_data) {
 }
 
 function editor_insert_tab() {
-	select_data = editor_get_select_block();
+	let select_data = editor_get_select_block();
 
 	if (select_data.ss != select_data.se) {
-		block_text_lines = select_data.bt.split('\n');
+		let block_text_lines = select_data.bt.split('\n');
 		select_data.bt = block_text_lines.join('\n\t');
 		select_data.bt = '\t' + select_data.bt;
-		tab_count = block_text_lines.length;
+		let tab_count = block_text_lines.length;
 		if (select_data.bs != select_data.ss) {
 			if (edit_area.value.charAt(select_data.ss - 1) != '\t') {
 				select_data.ss++;
@@ -121,11 +121,11 @@ function editor_insert_tab() {
 }
 
 function editor_remove_tab() {
-	select_data = editor_get_select_block();
+	let select_data = editor_get_select_block();
 
-	block_text_lines = select_data.bt.split('\n\t');
+	let block_text_lines = select_data.bt.split('\n\t');
 	select_data.bt = block_text_lines.join('\n');
-	tab_count = block_text_lines.length;
+	let tab_count = block_text_lines.length;
 	if (select_data.bs != select_data.ss)
 		if (edit_area.value.charAt(select_data.ss) != '\t') {
 			if (select_data.bt.charAt(0) == '\t')
@@ -148,24 +148,24 @@ function editor_extend_link(btn) {
 }
 
 function editor_select_link() {
-	selection_start = edit_area.selectionStart;
-	selection_end = edit_area.selectionEnd;
+	let selection_start = edit_area.selectionStart;
+	let selection_end = edit_area.selectionEnd;
 
 	editor_link_target.value = edit_area.value.substring(selection_start, selection_end);
 	editor_link_display.value = ''
 }
 
 function editor_insert_link() {
-	link_target = editor_link_target.value;
-	link_display = editor_link_display.value;
-	link_radio = 0;
+	let link_target = editor_link_target.value;
+	let link_display = editor_link_display.value;
+	let link_radio = 0;
 	for (var i = 0; i < editor_link_radio.length; i++) {
 		if (editor_link_radio[i].checked) {
 			link_radio = i;
 			break;
 		}
 	}
-	link_text = ''
+	let link_text = ''
 	if (link_display == '') {
 		if (link_radio == 0) {
 			link_text = '[[' + link_target + ']]';
@@ -193,8 +193,8 @@ function editor_close_section() {
 }
 
 function editor_extend_box(id, btn) {
-	var block_section;
-	for (var i = 0; i < editor_section_box.childNodes.length; i++) {
+	let block_section;
+	for (let i = 0; i < editor_section_box.childNodes.length; i++) {
 		var section = editor_section_box.childNodes[i];
 		if (section.id == id) {
 			block_section = section;
