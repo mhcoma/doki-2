@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<script src = "{{ url_for('static', path = 'login.js') }}"></script>
+
 <form name = "form" method = "post" action = "/login-submit/">
 	<div id = "content_title_box">
 		<span id = "content_title_text">{{ title }}</span>
@@ -10,18 +12,19 @@
 	<hr>
 
 	<div id = "login_box">
-		<label for = "username" class = "login_label">Username</label>
+		<label class = "login_label">
+			Username
+			<br>
+			<input type = "text" id = "login_username" class = "login_textbox" name = "username" autofocus>
+		</label>
 		<br>
 
-		<input type = "text" class = "login_textbox" name = "username" required autofocus>
+		<label class = "login_label">
+			Password
+			<br>
+			<input type = "password" id = "login_password" class = "login_textbox" name = "password">
+		</label>
 		<br>
-
-		<label for = "password" class = "login_label">Password</label>
-		<br>
-
-		<input type = "password" class = "login_textbox" name = "password" required>
-		<br>
-
 		
 		<label class = "login_label"></label>
 		<br>
@@ -32,12 +35,12 @@
 		</label>
 		<div class = "content_button_box">
 			<div class = "content_button_box_wrapper">
-				<button class = "btn_content_sub" type = "button" onclick = "location.href = '/join/'">
+				<button class = "btn btn_content_sub" type = "button" onclick = "location.href = '/join/'">
 					Join
 				</button>
 			</div>
 			
-			<input class = "btn_content" type = "submit" value = "Login">
+			<input class = "btn btn_content" type = "submit" value = "Login">
 		</div>
 	</div>
 	

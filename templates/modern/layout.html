@@ -37,18 +37,18 @@
 						<div id = "header_title_text">
 							<a href = "/">{{ settings.wikiname }}</a>
 						</div>
-						<button name = "" class = "btn_header" id = "header_menu_btn" onclick = "toggle_menu()"><img src = "{{ url_for('static', path = 'modern/symbol_menu.svg') }}"/></button>
+						<button name = "" class = "btn btn_header" id = "header_menu_btn" onclick = "toggle_menu()"><img src = "{{ url_for('static', path = 'modern/symbol_menu.svg') }}"/></button>
 					</div>
 					<div id = "header_menu_box">
 						<div id = "header_menu_btn_shadow"></div>
 						<div class = "content_button_box">
-							<button class = "btn_content" type = "button" onclick = "location.href = '/login/'">
+							<button class = "btn btn_content" type = "button" onclick = "location.href = '/login/'">
 								Login
 							</button>
-							<button class = "btn_content" type = "button" onclick = "location.href = '/logout/'">
+							<button class = "btn btn_content" type = "button" onclick = "location.href = '/logout/'">
 								Logout
 							</button>
-							<button class = "btn_content" type = "button" onclick = "location.href = '/join/'">
+							<button class = "btn btn_content" type = "button" onclick = "location.href = '/join/'">
 								Join
 							</button>
 						</div>
@@ -58,8 +58,8 @@
 							<input type = "search" name = "search" id = "header_search_bar">
 							<div id = "header_search_button_box">
 								<input type = "submit" value = "enter" style = "display: none;">
-								<button class = "btn_header" onclick="location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
-								<button class = "btn_header" onclick="location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
+								<button class = "btn btn_header" onclick="location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
+								<button class = "btn btn_header" onclick="location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
 							</div>
 						</div>
 					</form>

@@ -73,3 +73,10 @@ class User:
 		session["is_admin"] = self.is_admin
 
 		return True
+
+	def get_data(self):
+		user_data = dict()
+		user_data['existence'] = self.existence
+
+		result = json.dumps(user_data)
+		return result

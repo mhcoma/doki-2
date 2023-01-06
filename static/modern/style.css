@@ -60,6 +60,18 @@ header {
 	background-color: #3f3f3f;
 }
 
+.btn {
+	float: left;
+	width: fit-content;
+	min-width: 64px;
+	height: 32px;
+	line-height: 32px;
+	font-size: 14px;
+	padding: 0 16px;
+	border-style: none;
+	transition: all 0.1s;
+}
+
 #header_center {
 	width: 100%;
 	max-width: 1280px;
@@ -87,7 +99,7 @@ header {
 #header_menu_btn_shadow {
 	width: 64px;
 	height: 16px;
-	top : 64px;
+	top: 64px;
 	right: calc(calc(calc(max(100%, 1280px) - 1280px) / 2) + 16px);
 	position: absolute;
 	background-color: #5f5f5f;
@@ -98,7 +110,8 @@ header {
 	display: none;
 	background-color: #5f5f5f;
 	margin-top: 16px;
-	height : 128px;
+	height: 128px;
+	padding: 32px;
 }
 
 #header_search_form {
@@ -113,23 +126,23 @@ header {
 	width: calc(100% - 128px);
 	height: 32px;
 	padding: 0;
-	padding-left : 8px;
+	padding-left: 8px;
 	font-size: 16px;
-	border-style : none;
-	background-color : #f3f7ff;
-	color : #1f3f7f;
-	transition : all 0.1s;
+	border-style: none;
+	background-color: #f3f7ff;
+	color: #1f3f7f;
+	transition: all 0.1s;
 	float: left;
 	position: relative;
 }
 
 #header_search_bar:hover {
-	background-color : #ffffff;
+	background-color: #ffffff;
 }
 
 #header_search_bar:focus {
-	background-color : #ffffff;
-	color : #000000;
+	background-color: #ffffff;
+	color: #000000;
 }
 
 #header_search_btnbox {
@@ -140,14 +153,10 @@ header {
 .btn_header {
 	padding: 0;
 	width: 64px;
-	height: 32px;
 	line-height: 16px;
-	float: left;
 	font-size: 16px;
-	border-style: none;
-	background-color : #3f7fff;
+	background-color: #3f7fff;
 	color: #ffffff;
-	transition: all 0.1s;
 	border-right: 1px solid #9fbfff;
 	vertical-align: middle;
 }
@@ -162,9 +171,9 @@ header {
 }
 
 .btn_header img {
-	padding-top : 3px;
-	width : 16px;
-	height : 16px;
+	padding-top: 3px;
+	width: 16px;
+	height: 16px;
 }
 
 
@@ -199,14 +208,8 @@ section {
 
 .btn_content {
 	float: left;
-	width: 64px;
-	height: 32px;
-	line-height: 32px;
-	font-size: 16px;
-	border-style: none;
 	background-color: #3f7fff;
 	color: #ffffff;
-	transition: all 0.1s;
 	border-right: 1px solid #9fbfff;
 }
 
@@ -221,14 +224,8 @@ section {
 
 .btn_content_sub {
 	float: left;
-	width: 64px;
-	height: 32px;
-	line-height: 32px;
-	font-size: 16px;
-	border-style: none;
 	background-color: #e7efff;
 	color: #000000;
-	transition: all 0.1s;
 	border-right: 1px solid #1f3f7f;
 }
 
@@ -272,7 +269,7 @@ section {
 }
 
 #content hr {
-	background-color : #7f7f7f;
+	background-color: #7f7f7f;
 	height: 1px;
 	border: 0;
 }
@@ -306,7 +303,7 @@ section {
 }
 
 #content pre>code {
-	border : 1px solid #6f9fff;
+	border: 1px solid #6f9fff;
 	display: block;
 }
 
@@ -331,18 +328,10 @@ section {
 }
 
 .btn_editor {
-	float: left;
 	margin-top: 4px;
 	margin-right: 4px;
-	line-height: 32px;
-	width: fit-content;
-	min-width: 64px;
-	height: 32px;
-	font-size: 16px;
-	border-style: none;
 	background-color: #e7efff;
 	color: #000;
-	transition: all 0.1s;
 }
 
 .btn_editor:nth-child(1) {
@@ -376,30 +365,34 @@ section {
 	width: 100%;
 	margin-bottom: 8px;
 	line-height: 24px;
+	font-size: 14px;
 }
 
 .text_editor_section {
 	display: block;
-	width: calc(100% - 4px);
-	height: 24px;
-	line-height: 24px;
-	font-size: 16px;
-	transition : all 0.2s;
-	background-color : #e7efff;
-	border : 1px solid #3f3f3f;
+	width: calc(100% - 18px);
+	height: 30px;
+	line-height: 30px;
+	font-size: 14px;
+	padding: 0 8px;
+	transition: all 0.1s;
+	background-color: #f3f7ff;
+	color: #1f3f7f;
+	border: 1px solid #3f3f3f;
 }
 
 .text_editor_section:hover {
-	background-color : #ffffff;
+	background-color: #ffffff;
 }
 
 .text_editor_section:focus {
-	background-color : #ffffff;
+	background-color: #ffffff;
+	color: #000000;
 }
 
 .radio_editor_section {
 	float: left;
-	margin: 4px;
+	margin: 4px 0;
 	margin-right: 16px;
 	border: 2px solid #3f3f3f;
 	transition: 0.1s all;
@@ -419,16 +412,8 @@ section {
 }
 
 .btn_editor_section {
-	float: left;
-	width: fit-content;
-	min-width: 64px;
-	height: 32px;
-	line-height: 32px;
-	font-size: 16px;
-	border-style: none;
 	background-color: #3f7fff;
 	color: #ffffff;
-	transition: all 0.1s;
 	border-right: 1px solid #99b9ff;
 }
 
@@ -451,17 +436,17 @@ section {
 	line-height: 24px;
 	transition: all 0.1s;
 	background-color: #f3f7ff;
-	color : #1f3f7f;
+	color: #1f3f7f;
 	border: 1px solid #3f3f3f;
 }
 
 #edit_area:hover {
-	background-color : #ffffff;
+	background-color: #ffffff;
 }
 
 #edit_area:focus {
-	background-color : #ffffff;
-	color : #000000;
+	background-color: #ffffff;
+	color: #000000;
 }
 
 #login_box {
@@ -471,20 +456,18 @@ section {
 }
 
 .login_label {
-	height: 32px;
 	line-height: 32px;
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .login_textbox {
 	height: 30px;
 	line-height: 30px;
-	padding: 0;
-	padding-left : 8px;
-	font-size: 16px;
-	width: calc(100% - 10px);
+	padding: 0 8px;
+	font-size: 14px;
+	width: calc(100% - 18px);
 	background-color: #f3f7ff;
-	color : #1f3f7f;
+	color: #1f3f7f;
 	border: 1px solid #3f3f3f;
 }
 
@@ -494,7 +477,7 @@ section {
 
 .login_textbox:focus {
 	background-color: #ffffff;
-	color : #000000;
+	color: #000000;
 }
 
 .login_checkbox {

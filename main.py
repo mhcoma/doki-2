@@ -81,6 +81,12 @@ async def delete(request: fastapi.Request, title: str):
 	article.delete()
 	return f"/view/{title}"
 
+@app.get("/get_user/{username}", response_class = fastapi.responses.HTMLResponse)
+async def get_user(request: fastapi.Request, username: str):
+	user = core.user.User(username)
+	result = user.get_data()
+	return result
+
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
 async def login(request: fastapi.Request):
 	context = dict()
@@ -88,10 +94,13 @@ async def login(request: fastapi.Request):
 	context['title'] = "Login"
 	context['settings'] = settings
 
-	http_referer = request.headers['referer']
+	if 'username' in request.session:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
 
-	request.session['referer'] = http_referer
-
+	if 'referer' in request.headers:
+		http_referer = request.headers['referer']
+		request.session['referer'] = http_referer
+	
 	response = templates.TemplateResponse(f"{settings.skin}/login.html", context)
 
 	return response
@@ -133,6 +142,9 @@ async def join(request: fastapi.Request):
 	context['request'] = request
 	context['title'] = "Join"
 	context['settings'] = settings
+	
+	if 'username' in request.session:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
 	
 	response = templates.TemplateResponse(f"{settings.skin}/join.html", context)
 

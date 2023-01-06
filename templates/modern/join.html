@@ -12,31 +12,31 @@
 	<hr>
 
 	<div id = "login_box">
-		<label for = "username" class = "login_label">Username</label>
+		<label class = "login_label">
+			Username
+			<br>
+			<input type = "text" id = "join_username" class = "login_textbox" name = "username" maxlength = 32 autofocus>
+		</label>
 		<br>
 
-		<input type = "text" class = "login_textbox" name = "username" id = "username" required autofocus>
+		<label class = "login_label">
+			Password
+			<br>
+			<input type = "password" id = "join_password" class = "login_textbox" name = "password" maxlength = 32>
+		</label>
 		<br>
 
-		<label for = "password" class = "login_label">Password</label>
+		<label class = "login_label">
+			Confirm password
+			<br>
+			<input type = "password" id = "join_confirm_password" class = "login_textbox" name = "confirm_password" maxlength = 32></label>
 		<br>
-
-		<input type = "password" class = "login_textbox" name = "password" id = "password" required>
-		<br>
-
-		<label for = "confirm_password" class = "login_label">Confirm password</label>
-		<br>
-
-		<input type = "password" class = "login_textbox" name = "confirm_password" id = "confirm_password" required>
-		<br>
-
 		
-		<label for = "email" class = "login_label">E-mail</label>
+		<label class = "login_label">
+			E-mail
+			<br>
+			<input type = "text" id = "join_email" class = "login_textbox" name = "email" maxlength = 256></label>
 		<br>
-
-		<input type = "email" class = "login_textbox" name = "email" id = "email" required>
-		<br>
-
 		
 		<label class = "login_label"></label>
 		<br>
@@ -44,11 +44,11 @@
 		<label class = "login_label"></label>
 		<div class = "content_button_box">
 			<div class = "content_button_box_wrapper">
-				<button class = "btn_content_sub" type = "button" onclick = "location.href = '/login/'">
+				<button class = "btn btn_content_sub" type = "button" onclick = "location.href = '/login/'">
 					Login
 				</button>
 			</div>
-			<input class = "btn_content" type = "submit" value = "Join">
+			<input id = "join_submit" class = "btn btn_content" type = "submit" value = "Join">
 		</div>
 		<br>
 	</div>
