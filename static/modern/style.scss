@@ -1,3 +1,45 @@
+@use "sass:list";
+@use "sass:math";
+
+@use "coma";
+
+@function base_color($scale) {
+	@return coma.color_blue($scale);
+}
+
+@function neg_color($scale) {
+	@return coma.color_red($scale);
+}
+
+@function bg_color($scale) {
+	@return coma.color_grey($scale);
+}
+
+$base_color_025: base_color(0.25);
+$base_color_05: base_color(0.5);
+$base_color_075: base_color(0.75);
+$base_color_1: base_color(1.0);
+$base_color_125: base_color(1.25);
+$base_color_15: base_color(1.5);
+$base_color_175: base_color(1.75);
+$base_color_1875: base_color(1.875);
+$base_color_19375: base_color(1.9375);
+$base_color_2: base_color(2.0);
+
+$bg_color_0: bg_color(0.0);
+$bg_color_025: bg_color(0.25);
+$bg_color_05: bg_color(0.5);
+$bg_color_075: bg_color(0.75);
+$bg_color_1: bg_color(1.0);
+$bg_color_125: bg_color(1.25);
+$bg_color_15: bg_color(1.5);
+$bg_color_175: bg_color(1.75);
+$bg_color_1875: bg_color(1.875);
+$bg_color_19375: bg_color(1.9375);
+$bg_color_2: bg_color(2.0);
+
+$neg_color_1: neg_color(1.0);
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
@@ -11,6 +53,7 @@
 
 * {
 	font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
+	color: $bg_color_0;
 }
 
 a {
@@ -53,11 +96,11 @@ textarea {
 
 body {
 	margin: 0 auto;
-	background-color: #7f7f7f;
+	background-color: $bg_color_075;
 }
 
 header {
-	background-color: #3f3f3f;
+	background-color: $bg_color_05;
 }
 
 .btn {
@@ -93,7 +136,7 @@ header {
 	font-size: 32px;
 	font-weight: bold;
 	line-height: 32px;
-	color: #ffffff;
+	color: $bg_color_2;
 }
 
 #header_menu_btn_shadow {
@@ -102,13 +145,13 @@ header {
 	top: 64px;
 	right: calc(calc(calc(max(100%, 1280px) - 1280px) / 2) + 16px);
 	position: absolute;
-	background-color: #5f5f5f;
-	background: linear-gradient(0deg, rgba(95, 95, 95, 1) 0%, rgba(31, 63, 127, 1) 100%);
+	background-color: $bg_color_075;
+	background: linear-gradient(0deg, $bg_color_075 0%, $base_color_05 100%);
 }
 
 #header_menu_box {
 	display: none;
-	background-color: #5f5f5f;
+	background-color: $bg_color_075;
 	margin-top: 16px;
 	height: 128px;
 	padding: 32px;
@@ -129,20 +172,20 @@ header {
 	padding-left: 8px;
 	font-size: 16px;
 	border-style: none;
-	background-color: #f3f7ff;
-	color: #1f3f7f;
+	background-color: $base_color_19375;
+	color: $base_color_05;
 	transition: all 0.1s;
 	float: left;
 	position: relative;
 }
 
 #header_search_bar:hover {
-	background-color: #ffffff;
+	background-color: $bg_color_2;
 }
 
 #header_search_bar:focus {
-	background-color: #ffffff;
-	color: #000000;
+	background-color: $bg_color_2;
+	color: $bg_color_0;
 }
 
 #header_search_btnbox {
@@ -155,9 +198,9 @@ header {
 	width: 64px;
 	line-height: 16px;
 	font-size: 16px;
-	background-color: #3f7fff;
-	color: #ffffff;
-	border-right: 1px solid #9fbfff;
+	background-color: $base_color_1;
+	color: $bg_color_2;
+	border-right: 1px solid $base_color_15;
 	vertical-align: middle;
 }
 
@@ -166,8 +209,8 @@ header {
 }
 
 .btn_header:hover {
-	background-color: #1f3f7f;
-	color: #ffffff;
+	background-color: $base_color_05;
+	color: $bg_color_2;
 }
 
 .btn_header img {
@@ -176,16 +219,15 @@ header {
 	height: 16px;
 }
 
-
 section {
-	background-color: #dfdfdf;
+	background-color: $bg_color_175;
 }
 
 #section_center {
 	width: 100%;
 	max-width: 1280px;
 	margin: 0 auto;
-	background-color: #ffffff;
+	background-color: $bg_color_2;
 }
 
 #section_center_inner {
@@ -208,9 +250,9 @@ section {
 
 .btn_content {
 	float: left;
-	background-color: #3f7fff;
-	color: #ffffff;
-	border-right: 1px solid #9fbfff;
+	background-color: $base_color_1;
+	color: $bg_color_2;
+	border-right: 1px solid $base_color_15;
 }
 
 .btn_content:nth-last-child(1) {
@@ -218,15 +260,15 @@ section {
 }
 
 .btn_content:hover {
-	background-color: #1f3f7f;
-	color: #ffffff;
+	background-color: $base_color_05;
+	color: $bg_color_2;
 }
 
 .btn_content_sub {
 	float: left;
-	background-color: #e7efff;
-	color: #000000;
-	border-right: 1px solid #1f3f7f;
+	background-color: $base_color_1875;
+	color: $bg_color_0;
+	border-right: 1px solid $base_color_05;
 }
 
 .btn_content_sub:nth-last-child(1) {
@@ -234,86 +276,90 @@ section {
 }
 
 .btn_content_sub:hover {
-	background-color: #cfdfff;
+	background-color: $base_color_175;
 }
 
+$hr_color: $bg_color_05;
+$hd_line: 1px solid $hr_color;
 
-#content h1 {
-	font-size: 32px;
-	border-bottom: 1px solid #7f7f7f;
-}
+#content {
+	h1 {
+		font-size: 32px;
+		border-bottom: $hd_line;
+	}
 
-#content h2 {
-	font-size: 28px;
-	border-bottom: 1px solid #7f7f7f;
-}
+	h2 {
+		font-size: 28px;
+		border-bottom: $hd_line;
+	}
 
-#content h3 {
-	font-size: 24px;
-	border-bottom: 1px solid #7f7f7f;
-}
+	h3 {
+		font-size: 24px;
+		border-bottom: $hd_line;
+	}
 
-#content h4 {
-	font-size: 20px;
-	border-bottom: 1px solid #7f7f7f;
-}
+	h4 {
+		font-size: 20px;
+		border-bottom: $hd_line;
+	}
 
-#content h5 {
-	font-size: 18px;
-	border-bottom: 1px solid #7f7f7f;
-}
+	h5 {
+		font-size: 18px;
+		border-bottom: $hd_line;
+	}
 
-#content h6 {
-	font-size: 16px;
-	border-bottom: 1px solid #7f7f7f;
-}
+	h6 {
+		font-size: 16px;
+		border-bottom: $hd_line;
+	}
 
-#content hr {
-	background-color: #7f7f7f;
-	height: 1px;
-	border: 0;
-}
+	hr {
+		background-color: $hr_color;
+		height: 1px;
+		border: 0;
+	}
 
-#content a {
-	color: #3f7fff;
-	transition: all 0.1s;
-}
+	a {
+		color: $base_color_1;
+		transition: all 0.1s;
+	}
 
-#content a:hover {
-	background-color: #3f7fff;
-	color: #ffffff;
-}
+	a:hover {
+		background-color: $base_color_1;
+		color: $bg_color_2;
+	}
 
-#content a.ne_wikilink {
-	color: #ff3f7f;
-}
+	a.ne_wikilink {
+		color: $neg_color_1;
+	}
 
-#content a.ne_wikilink:hover {
-	background-color: #ff3f7f;
-	color: #ffffff;
-}
+	a.ne_wikilink:hover {
+		background-color: $neg_color_1;
+		color: $bg_color_2;
+	}
 
-#content blockquote {
-	border: 1px solid #6f9fff;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-left: 16px;
-	padding-right: 16px;
-	border-left: 16px solid #6f9fff;
-}
+	blockquote {
+		border: 1px solid $base_color_125;
+		margin-left: 0px;
+		margin-right: 0px;
+		padding-left: 16px;
+		padding-right: 16px;
+		border-left: 16px solid $base_color_125;
+	}
 
-#content pre>code {
-	border: 1px solid #6f9fff;
-	display: block;
-}
+	pre>code {
+		border: 1px solid $base_color_125;
+		display: block;
+	}
 
-#content code {
-	font-family: "D2Coding", courier, monospace;
-}
+	code {
+		font-family: "D2Coding", courier, monospace;
+	}
 
-#content p>code {
-	background-color: #e7efff;
-	padding: 0 4px;
+	p>code {
+		background-color: $base_color_1875;
+		padding: 0 4px;
+	}
 }
 
 #editor_button_box {
@@ -330,8 +376,8 @@ section {
 .btn_editor {
 	margin-top: 4px;
 	margin-right: 4px;
-	background-color: #e7efff;
-	color: #000;
+	background-color: $base_color_1875;
+	color: $bg_color_0;
 }
 
 .btn_editor:nth-child(1) {
@@ -339,12 +385,12 @@ section {
 }
 
 .btn_editor:hover {
-	background-color: #cfdfff;
+	background-color: $base_color_175;
 }
 
 #editor_section_box {
 	float: left;
-	background-color: #dfdfdf;
+	background-color: $bg_color_175;
 	width: 100%;
 	height: 100%;
 }
@@ -376,25 +422,25 @@ section {
 	font-size: 14px;
 	padding: 0 8px;
 	transition: all 0.1s;
-	background-color: #f3f7ff;
-	color: #1f3f7f;
-	border: 1px solid #3f3f3f;
+	background-color: $base_color_19375;
+	color: $base_color_05;
+	border: 1px solid $bg_color_025;
 }
 
 .text_editor_section:hover {
-	background-color: #ffffff;
+	background-color: $bg_color_2;
 }
 
 .text_editor_section:focus {
-	background-color: #ffffff;
-	color: #000000;
+	background-color: $bg_color_2;
+	color: $bg_color_0;
 }
 
 .radio_editor_section {
 	float: left;
 	margin: 4px 0;
 	margin-right: 16px;
-	border: 2px solid #3f3f3f;
+	border: 2px solid $bg_color_025;
 	transition: 0.1s all;
 	border-radius: 50%;
 	width: 16px;
@@ -402,8 +448,8 @@ section {
 }
 
 .radio_editor_section:checked {
-	background-color: #ffffff;
-	border: 6px solid #3f7fff;
+	background-color: $bg_color_2;
+	border: 6px solid $base_color_1;
 }
 
 .editor_section_button_box {
@@ -412,9 +458,9 @@ section {
 }
 
 .btn_editor_section {
-	background-color: #3f7fff;
-	color: #ffffff;
-	border-right: 1px solid #99b9ff;
+	background-color: $base_color_1;
+	color: $bg_color_2;
+	border-right: 1px solid $base_color_15;
 }
 
 .btn_editor_section:nth-last-child(1) {
@@ -422,8 +468,8 @@ section {
 }
 
 .btn_editor_section:hover {
-	background-color: #1f3f7f;
-	color: #ffffff;
+	background-color: $base_color_05;
+	color: $bg_color_2;
 }
 
 #edit_area {
@@ -435,18 +481,18 @@ section {
 	padding: 8px;
 	line-height: 24px;
 	transition: all 0.1s;
-	background-color: #f3f7ff;
-	color: #1f3f7f;
-	border: 1px solid #3f3f3f;
+	background-color: $base_color_19375;
+	color: $base_color_05;
+	border: 1px solid $bg_color_025;
 }
 
 #edit_area:hover {
-	background-color: #ffffff;
+	background-color: $bg_color_2;
 }
 
 #edit_area:focus {
-	background-color: #ffffff;
-	color: #000000;
+	background-color: $bg_color_2;
+	color: $bg_color_0;
 }
 
 #login_box {
@@ -466,18 +512,18 @@ section {
 	padding: 0 8px;
 	font-size: 14px;
 	width: calc(100% - 18px);
-	background-color: #f3f7ff;
-	color: #1f3f7f;
-	border: 1px solid #3f3f3f;
+	background-color: $base_color_19375;
+	color: $base_color_05;
+	border: 1px solid $bg_color_025;
 }
 
 .login_textbox:hover {
-	background-color: #ffffff;
+	background-color: $bg_color_2;
 }
 
 .login_textbox:focus {
-	background-color: #ffffff;
-	color: #000000;
+	background-color: $bg_color_2;
+	color: $bg_color_0;
 }
 
 .login_checkbox {
@@ -485,19 +531,19 @@ section {
 	margin: 8px;
 	margin-left: 0;
 	margin-right: 16px;
-	border: 2px solid #3f3f3f;
+	border: 2px solid $bg_color_025;
 	transition: 0.1s all;
 	width: 16px;
 	height: 16px;
 }
 
 .login_checkbox:checked {
-	background-color: #ffffff;
-	border: 6px solid #3f7fff;
+	background-color: $bg_color_2;
+	border: 6px solid $base_color_1;
 }
 
 footer {
 	width: 100%;
 	height: 64px;
-	background-color: #3f3f3f;
+	background-color: $bg_color_05;
 }

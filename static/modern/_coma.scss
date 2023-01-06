@@ -1,0 +1,67 @@
+@use "sass:list";
+@use "sass:math";
+
+@function color_system($scale, $r, $g, $b) {
+	$scale: Min(Max($scale, 0.0), 2.0);
+	$color: calc($r * 256), calc($g * 256), calc($b * 256);
+
+	$color_max: 0;
+	@if $scale >= 1.0 {
+		$color_max: 256;
+	}
+	@else {
+		$color_max: calc(256 * $scale);
+	}
+
+	$color_min: 0;
+	@if $scale <= 1.0 {
+		$color_min: 0.0;
+	}
+	@else {
+		$color_min: calc(256 * ($scale - 1.0));
+	}
+
+	$color_diff: calc($color_max - $color_min);
+
+	$new_color: ();
+
+	@each $i in $color {
+		$n: math.floor(
+			calc((math.div($i, 256) * $color_diff)) + $color_min - 1.0
+		);
+		@if $n < 0 {
+			$n: 0;
+		}
+		$new_color: list.append($new_color, $n);
+	}
+
+	@return rgb($new_color);
+}
+
+@function color_red($scale) {
+	@return color_system($scale, 1.0, 0.25, 0.5);
+}
+
+@function color_orange($scale) {
+	@return color_system($scale, 1.0, 0.5, 0.25);
+}
+
+@function color_yellow($scale) {
+	@return color_system($scale, 0.5, 1.0, 0.25);
+}
+
+@function color_green($scale) {
+	@return color_system($scale, 0.5, 1.0, 0.25);
+}
+
+@function color_blue($scale) {
+	@return color_system($scale, 0.25, 0.5, 1.0);
+}
+
+@function color_purple($scale) {
+	@return color_system($scale, 0.5, 0.25, 1.0);
+}
+
+@function color_grey($scale) {
+	@return color_system($scale, 0.5, 0.5, 0.5);
+}
