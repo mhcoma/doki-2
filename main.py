@@ -25,11 +25,17 @@ async def view(request: fastapi.Request, title: str):
 	article.load()
 	article.convert_markdown()
 
+	if 'username' in request.session:
+		user = core.user.User(request.session['username'])
+	else:
+		user = None
+
 	context = dict()
 	context['request'] = request
 	context['title'] = title
-	context['settings'] = settings
 	context['article'] = article
+	context['settings'] = settings
+	context['user'] = user
 	
 	response = templates.TemplateResponse(f"{settings.skin}/view.html", context)
 
@@ -40,11 +46,17 @@ async def edit(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 
+	if 'username' in request.session:
+		user = core.user.User(request.session['username'])
+	else:
+		user = None
+
 	context = dict()
 	context['request'] = request
 	context['title'] = f"Edit {title}"
-	context['settings'] = settings
 	context['article'] = article
+	context['settings'] = settings
+	context['user'] = user
 	
 	response = templates.TemplateResponse(f"{settings.skin}/edit.html", context)
 
@@ -138,10 +150,17 @@ async def logout(request: fastapi.Request):
 
 @app.get("/join/", response_class = fastapi.responses.HTMLResponse)
 async def join(request: fastapi.Request):
+
+	if 'username' in request.session:
+		user = core.user.User(request.session['username'])
+	else:
+		user = None
+
 	context = dict()
 	context['request'] = request
 	context['title'] = "Join"
 	context['settings'] = settings
+	context['user'] = user
 	
 	if 'username' in request.session:
 		return fastapi.responses.RedirectResponse("/", status_code = 303)

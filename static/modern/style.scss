@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
 
 @font-face {
 	font-family: "D2Coding";
@@ -62,8 +62,6 @@ header {
 
 .btn {
 	float: left;
-	width: -webkit-fit-content;
-	width: -moz-fit-content;
 	width: fit-content;
 	min-width: 64px;
 	height: 32px;
@@ -83,7 +81,6 @@ header {
 #header_center_inner {
 	padding: 16px;
 }
-
 #header_title_box {
 	margin-top: 16px;
 	height: 32px;
@@ -103,10 +100,10 @@ header {
 	width: 64px;
 	height: 16px;
 	top: 64px;
-	right: calc((max(100%, 1280px) - 1280px) / 2 + 16px);
+	right: calc(calc(calc(max(100%, 1280px) - 1280px) / 2) + 16px);
 	position: absolute;
 	background-color: #5f5f5f;
-	background: linear-gradient(0deg, rgb(95, 95, 95) 0%, rgb(31, 63, 127) 100%);
+	background: linear-gradient(0deg, rgba(95, 95, 95, 1) 0%, rgba(31, 63, 127, 1) 100%);
 }
 
 #header_menu_box {
@@ -179,6 +176,7 @@ header {
 	height: 16px;
 }
 
+
 section {
 	background-color: #dfdfdf;
 }
@@ -238,6 +236,7 @@ section {
 .btn_content_sub:hover {
 	background-color: #cfdfff;
 }
+
 
 #content h1 {
 	font-size: 32px;
@@ -303,7 +302,7 @@ section {
 	border-left: 16px solid #6f9fff;
 }
 
-#content pre > code {
+#content pre>code {
 	border: 1px solid #6f9fff;
 	display: block;
 }
@@ -312,7 +311,7 @@ section {
 	font-family: "D2Coding", courier, monospace;
 }
 
-#content p > code {
+#content p>code {
 	background-color: #e7efff;
 	padding: 0 4px;
 }
@@ -323,7 +322,7 @@ section {
 }
 
 #editor_button_box::after {
-	content: "";
+	content: '';
 	display: block;
 	clear: both;
 }
@@ -357,7 +356,7 @@ section {
 
 .editor_section:after {
 	display: block;
-	content: "";
+	content: '';
 	clear: both;
 }
 
@@ -501,4 +500,4 @@ footer {
 	width: 100%;
 	height: 64px;
 	background-color: #3f3f3f;
-}/*# sourceMappingURL=style.css.map */
+}

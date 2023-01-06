@@ -42,15 +42,18 @@
 					<div id = "header_menu_box">
 						<div id = "header_menu_btn_shadow"></div>
 						<div class = "content_button_box">
-							<button class = "btn btn_content" type = "button" onclick = "location.href = '/login/'">
-								Login
-							</button>
-							<button class = "btn btn_content" type = "button" onclick = "location.href = '/logout/'">
-								Logout
-							</button>
-							<button class = "btn btn_content" type = "button" onclick = "location.href = '/join/'">
-								Join
-							</button>
+							{% if user %}
+								<button class = "btn btn_content" type = "button" onclick = "location.href = '/logout/'">
+									Logout
+								</button>
+							{% else %}
+								<button class = "btn btn_content" type = "button" onclick = "location.href = '/login/'">
+									Login
+								</button>
+								<button class = "btn btn_content" type = "button" onclick = "location.href = '/join/'">
+									Join
+								</button>
+							{% endif %}
 						</div>
 					</div>
 					<form id = "header_search_form" method = "get" action = "/search-go/">
