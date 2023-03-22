@@ -22,16 +22,16 @@ import os
 
 import typing
 
-def build_url(text, base, end):
+def build_url(text: str, base: str, end: str):
 # def build_url(label):
 	""" Build a url from the label, a base, and an end. """
 	# clean_label = re.sub(r'([ ]+_)|(_[ ]+)|([ ]+)', '_', label)
 	# return '{}{}{}'.format(base, clean_label, end)
-	list = text.split('|')
-	title = list[0]
+	splitted_text = text.split('|')
+	title = splitted_text[0]
 	label = title
-	if len(list) != 1:
-		label = list[1]
+	if len(splitted_text) != 1:
+		label = splitted_text[1]
 	return (f"{base}{title}{end}", label, title)
 
 def find_article(title):

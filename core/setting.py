@@ -14,7 +14,8 @@ class Setting:
 			settings = {
 				'wikiname' : "WikiName",
 				'mainpage' : "MainPage",
-				'skin' : "modern"
+				'skin' : "modern",
+				'codehilite' : "default"
 			}
 			settings_file = open(settings_filename, 'w', encoding = "utf-8")
 			json.dump(settings, settings_file, indent = '\t')
@@ -23,3 +24,4 @@ class Setting:
 		self.mainpage = settings['mainpage']
 		self.wikiname = settings['wikiname']
 		self.skin = settings['skin']
+		self.codehilite = settings['codehilite']

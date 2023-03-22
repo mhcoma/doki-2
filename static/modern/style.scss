@@ -53,7 +53,7 @@ $neg_color_1: neg_color(1.0);
 
 * {
 	font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
-	color: $bg_color_0;
+	// color: $bg_color_0;
 }
 
 a {
@@ -350,14 +350,19 @@ $hd_line: 1px solid $hr_color;
 	pre>code {
 		border: 1px solid $base_color_125;
 		display: block;
+		padding: 16px 16px;
 	}
 
 	code {
 		font-family: "D2Coding", courier, monospace;
+		span {
+			font-family: "D2Coding", courier, monospace;
+		}
 	}
 
 	p>code {
 		background-color: $base_color_1875;
+		font-family: "D2Coding", courier, monospace;
 		padding: 0 4px;
 	}
 }

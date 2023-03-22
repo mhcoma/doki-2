@@ -5,10 +5,12 @@ import shutil
 
 import markdown
 import markdown.extensions.fenced_code
+import markdown.extensions.codehilite
 
 import core
 import core.wikilinks_plus
 import core.toc_plus
+import core.pygments_markdown
 
 class Article:
 	def __init__(self, title: str):
@@ -52,16 +54,15 @@ class Article:
 	def convert_markdown(self):
 		self.data = markdown.markdown(
 			self.raw_data,
-			output_format = "html5",
+			output_format = "html",
 			extensions = [
 				core.wikilinks_plus.WikiLinkPlusExtension(
 					base_url = "/view/",
 					end_url = "",
 					find_article = find_article
 				),
-				markdown.extensions.fenced_code.FencedCodeExtension(
-					lang_prefix = ""
-				),
+				markdown.extensions.fenced_code.FencedCodeExtension(),
+				markdown.extensions.codehilite.CodeHiliteExtension(),
 				core.toc_plus.TocPlusExtension(
 					title = "Table of Contents",
 					slugify = core.toc_plus.do_nothing

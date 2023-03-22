@@ -9,7 +9,6 @@
 }
 * {
   font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
-  color: rgb(0, 0, 0);
 }
 
 a {
@@ -61,7 +60,6 @@ header {
 
 .btn {
   float: left;
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   min-width: 64px;
@@ -293,12 +291,17 @@ section {
 #content pre > code {
   border: 1px solid rgb(111, 159, 255);
   display: block;
+  padding: 16px 16px;
 }
 #content code {
   font-family: "D2Coding", courier, monospace;
 }
+#content code span {
+  font-family: "D2Coding", courier, monospace;
+}
 #content p > code {
   background-color: rgb(231, 239, 255);
+  font-family: "D2Coding", courier, monospace;
   padding: 0 4px;
 }
 

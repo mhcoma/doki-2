@@ -1,5 +1,6 @@
 {
-	"wikiname": "Coma's Document",
-	"mainpage": "대문",
-	"skin": "modern"
+	"wikiname": "WikiName",
+	"mainpage": "MainPage",
+	"skin": "modern",
+	"codehilite": "dracula"
 }
