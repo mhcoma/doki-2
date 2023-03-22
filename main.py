@@ -16,7 +16,7 @@ app.mount("/static", fastapi.staticfiles.StaticFiles(directory = "static"), name
 
 app.add_middleware(
 	starlette.middleware.sessions.SessionMiddleware,
-	secret_key = "asdf"
+	secret_key = settings.secret_key
 )
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)

@@ -1,9 +1,16 @@
 import json
 import os
+import secrets
 
 import core
 
 class Setting:
+	mainpage: str
+	wikiname: str
+	skin: str
+	codehilite: str
+	secret_key: str
+
 	def __init__(self):
 		settings_filename = os.path.join(core.base_dir, "settings", "settings.json")
 		if os.path.isfile(settings_filename):
@@ -11,11 +18,14 @@ class Setting:
 			settings = json.load(settings_file)
 			settings_file.close()
 		else:
+			secret_key = secrets.token_hex()
+
 			settings = {
 				'wikiname' : "WikiName",
 				'mainpage' : "MainPage",
 				'skin' : "modern",
-				'codehilite' : "default"
+				'codehilite' : "github-dark",
+				'secret_key' : secret_key
 			}
 			settings_file = open(settings_filename, 'w', encoding = "utf-8")
 			json.dump(settings, settings_file, indent = '\t')
@@ -25,3 +35,4 @@ class Setting:
 		self.wikiname = settings['wikiname']
 		self.skin = settings['skin']
 		self.codehilite = settings['codehilite']
+		self.secret_key = settings['secret_key']
