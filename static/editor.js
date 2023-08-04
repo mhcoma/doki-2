@@ -73,17 +73,14 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 		case editor_insert_position.LEFT: {
 			selected = token_front + selected;
 			back_length = 0;
-			break;
-		}
+		} break;
 		case editor_insert_position.CENTER: {
 			selected = token_front + selected + token_back;
-			break;
-		}
+		} break;
 		case editor_insert_position.RIGHT: {
 			selected = selected + token_back;
 			front_length = 0;
-			break;
-		}
+		} break;
 	}
 	edit_area.focus();
 	document.execCommand('insertText', false, selected);
@@ -91,20 +88,17 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 
 	switch (select_again) {
 		case editor_select_again.NONE: {
-			break;
-		}
+		} break;
 		case editor_select_again.PART: {
 			edit_area.select();
 			edit_area.selectionStart = start + front_length;
 			edit_area.selectionEnd = end - back_length;
-			break;
-		}
+		} break;
 		case editor_select_again.ALL: {
 			edit_area.select();
 			edit_area.selectionStart = start;
 			edit_area.selectionEnd = end;
-			break;
-		}
+		} break;
 	}
 }
 
@@ -273,12 +267,10 @@ function editor_keydown(event) {
 			else {
 				editor_insert_tab();
 			}
-			break;
-		}
+		} break;
 		case 16: {
 			keydown_shift = true;
-			break;
-		}
+		} break;
 	}
 }
 
@@ -286,7 +278,6 @@ function editor_keyup(event) {
 	switch (event.keyCode) {
 		case 16: {
 			keydown_shift = false;
-			break;
-		}
+		} break;
 	}
 }
