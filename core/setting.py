@@ -12,7 +12,8 @@ class Setting:
 	secret_key: str
 
 	def __init__(self):
-		settings_filename = os.path.join(core.base_dir, "settings", "settings.json")
+		settings_path = os.path.join(core.base_dir, "settings");
+		settings_filename = os.path.join(settings_path, "settings.json")
 		if os.path.isfile(settings_filename):
 			settings_file = open(settings_filename, 'r', encoding = "utf-8")
 			settings = json.load(settings_file)
@@ -27,6 +28,8 @@ class Setting:
 				'codehilite' : "github-dark",
 				'secret_key' : secret_key
 			}
+			if not os.path.isdir(settings_path):
+				os.mkdir(settings_path)
 			settings_file = open(settings_filename, 'w', encoding = "utf-8")
 			json.dump(settings, settings_file, indent = '\t')
 			settings_file.close()

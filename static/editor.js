@@ -1,3 +1,18 @@
+const editor_insert_position = {
+	LEFT: 0,
+	CENTER: 1,
+	RIGHT: 2
+};
+Object.freeze(editor_insert_position);
+
+const editor_select_again = {
+	NONE: 0,
+	PART: 1,
+	ALL: 2
+};
+Object.freeze(editor_select_again);
+
+
 let editor_section_box;
 let editor_button_section_focused;
 
@@ -15,6 +30,34 @@ $(window).on('load', function() {
 	edit_area = $('#edit_area')[0];
 });
 
+function editor_italic() {
+	editor_select_insert_single(
+		'_', 'Italic Text',
+		editor_insert_position.CENTER, editor_select_again.PART
+	);
+}
+
+function editor_bold() {
+	editor_select_insert_single(
+		'__', 'Bold Text',
+		editor_insert_position.CENTER, editor_select_again.PART
+	);
+}
+
+function editor_inline_code() {
+	editor_select_insert_single(
+		'`', 'Inline Code',
+		editor_insert_position.CENTER, editor_select_again.PART
+	);
+}
+
+function editor_blockquote() {
+	editor_select_insert_single(
+		'>', 'Blockquote',
+		editor_insert_position.LEFT, editor_select_again.PART
+	);
+}
+
 function editor_select_insert_pair(token_front, token_back, empty_replace, position, select_again) {
 	let start = edit_area.selectionStart;
 	let end = edit_area.selectionEnd;
@@ -27,16 +70,16 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 	let back_length = token_back.length;
 
 	switch (position) {
-		case 0: {
+		case editor_insert_position.LEFT: {
 			selected = token_front + selected;
 			back_length = 0;
 			break;
 		}
-		case 1: {
+		case editor_insert_position.CENTER: {
 			selected = token_front + selected + token_back;
 			break;
 		}
-		case 2: {
+		case editor_insert_position.RIGHT: {
 			selected = selected + token_back;
 			front_length = 0;
 			break;
@@ -47,16 +90,16 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 	end = start + selected.length;
 
 	switch (select_again) {
-		case 0: {
+		case editor_select_again.NONE: {
 			break;
 		}
-		case 1: {
+		case editor_select_again.PART: {
 			edit_area.select();
 			edit_area.selectionStart = start + front_length;
 			edit_area.selectionEnd = end - back_length;
 			break;
 		}
-		case 2: {
+		case editor_select_again.ALL: {
 			edit_area.select();
 			edit_area.selectionStart = start;
 			edit_area.selectionEnd = end;
