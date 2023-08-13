@@ -56,7 +56,17 @@
 				Table
 			</div>
 			<div class = "editor_section" id = "editor_fenced_code">
-				Code Block
+				<label class = "lbl_editor_section">Language:
+					<select class = "select_editor_section" name = "editor_fenced_code_language">
+						{% for language_name, short_name in editor_data.codehilite_lexers %}
+							<option value = "{{ short_name }}">{{ language_name }}</option>
+						{% endfor %}
+					</select>
+				</label>
+				<div class = "editor_section_button_box">
+					<button class = "btn btn_editor_section" type = "button" onclick = "editor_close_section()">Cancel</button>
+					<button class = "btn btn_editor_section" type = "button" onclick = "editor_insert_fenced_code()">Insert Fenced Code</button>
+				</div>
 			</div>
 		</div>
 	</div>

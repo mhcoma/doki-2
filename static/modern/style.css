@@ -395,6 +395,28 @@ section {
   border: 6px solid rgb(63, 127, 255);
 }
 
+.select_editor_section {
+  display: block;
+  width: calc(100% - 18px);
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  padding: 0 8px;
+  transition: all 0.1s;
+  background-color: rgb(243, 247, 255);
+  color: rgb(31, 63, 127);
+  border: 1px solid rgb(31, 31, 31);
+}
+
+.select_editor_section:hover {
+  background-color: rgb(255, 255, 255);
+}
+
+.select_editor_section:focus {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+}
+
 .editor_section_button_box {
   float: right;
   display: block;

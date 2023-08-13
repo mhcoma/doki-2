@@ -20,6 +20,8 @@ let editor_link_target;
 let editor_link_display;
 let editor_link_radio;
 
+let editor_fenced_code_language;
+
 let keydown_shift = false;
 
 $(window).on('load', function() {
@@ -27,6 +29,7 @@ $(window).on('load', function() {
 	editor_link_target = $('#editor_link_target')[0];
 	editor_link_display = $('#editor_link_display')[0];
 	editor_link_radio = $('[name = "editor_link_radio"]');
+	editor_fenced_code_language = $('[name = "editor_fenced_code_language"]')
 	edit_area = $('#edit_area')[0];
 });
 
@@ -189,7 +192,7 @@ function editor_select_link() {
 	let selection_end = edit_area.selectionEnd;
 
 	editor_link_target.value = edit_area.value.substring(selection_start, selection_end);
-	editor_link_display.value = ''
+	editor_link_display.value = '';
 }
 
 function editor_insert_link() {
@@ -222,7 +225,19 @@ function editor_insert_link() {
 	edit_area.focus();
 	document.execCommand('insertText', false, link_text);
 
-	editor_close_section()
+	editor_close_section();
+}
+
+function editor_insert_fenced_code() {
+	editor_select_insert_pair(
+		'```' + editor_fenced_code_language.val() + '\n', '\n```', 'Fenced Code',
+		editor_insert_position.CENTER,
+		editor_select_again.PART
+	);
+
+	edit_area.focus();
+
+	editor_close_section();
 }
 
 function editor_close_section() {
@@ -254,7 +269,7 @@ function editor_extend_box(id, btn) {
 		editor_button_section_focused = undefined;
 	}
 	btn.blur();
-	edit_area.focus()
+	edit_area.focus();
 }
 
 function editor_keydown(event) {

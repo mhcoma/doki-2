@@ -7,8 +7,10 @@ import starlette.middleware.sessions
 import core.article
 import core.setting
 import core.user
+import core.editor_data
 
 settings = core.setting.Setting()
+editor_data = core.editor_data.EditorData()
 
 app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
@@ -57,6 +59,7 @@ async def edit(request: fastapi.Request, title: str):
 	context['article'] = article
 	context['settings'] = settings
 	context['user'] = user
+	context['editor_data'] = editor_data
 	
 	response = templates.TemplateResponse(f"{settings.skin}/edit.html", context)
 
