@@ -48,6 +48,8 @@ class User:
 		user_data['hash_b'] = self.hash_b
 		user_data['is_admin'] = False
 
+		if not os.path.isdir(users_directory):
+			os.makedirs(users_directory)
 		user_file = open(self.user_filename, 'w', encoding = "utf-8")
 		json.dump(user_data, user_file, indent = '\t')
 		user_file.close()

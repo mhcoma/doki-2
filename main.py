@@ -4,13 +4,9 @@ import fastapi.staticfiles
 import fastapi.templating
 import starlette.middleware.sessions
 
+import core
 import core.article
-import core.setting
 import core.user
-import core.editor_data
-
-settings = core.setting.Setting()
-editor_data = core.editor_data.EditorData()
 
 app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
@@ -18,7 +14,7 @@ app.mount("/static", fastapi.staticfiles.StaticFiles(directory = "static"), name
 
 app.add_middleware(
 	starlette.middleware.sessions.SessionMiddleware,
-	secret_key = settings.secret_key
+	secret_key = core.settings.secret_key
 )
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
@@ -36,10 +32,10 @@ def view(request: fastapi.Request, title: str):
 	context['request'] = request
 	context['title'] = title
 	context['article'] = article
-	context['settings'] = settings
+	context['settings'] = core.settings
 	context['user'] = user
 	
-	response = templates.TemplateResponse(f"{settings.skin}/view.html", context)
+	response = templates.TemplateResponse(f"{core.settings.skin}/view.html", context)
 
 	return response
 
@@ -57,11 +53,11 @@ def edit(request: fastapi.Request, title: str):
 	context['request'] = request
 	context['title'] = f"Edit {title}"
 	context['article'] = article
-	context['settings'] = settings
+	context['settings'] = core.settings
 	context['user'] = user
-	context['editor_data'] = editor_data
+	context['editor_data'] = core.editor_data
 	
-	response = templates.TemplateResponse(f"{settings.skin}/edit.html", context)
+	response = templates.TemplateResponse(f"{core.settings.skin}/edit.html", context)
 
 	return response
 
@@ -107,16 +103,17 @@ def login(request: fastapi.Request):
 	context = dict()
 	context['request'] = request
 	context['title'] = "Login"
-	context['settings'] = settings
+	context['settings'] = core.settings
 
 	if 'username' in request.session:
-		return fastapi.responses.RedirectResponse("/", status_code = 303)
+		redirect_url = "/"
+		return fastapi.responses.RedirectResponse(redirect_url, status_code = 303)
 
 	if 'referer' in request.headers:
 		http_referer = request.headers['referer']
 		request.session['referer'] = http_referer
 	
-	response = templates.TemplateResponse(f"{settings.skin}/login.html", context)
+	response = templates.TemplateResponse(f"{core.settings.skin}/login.html", context)
 
 	return response
 
@@ -128,14 +125,16 @@ def login_submit(
 	password: str = fastapi.Form()
 ):
 	user = core.user.User(username)
-	user.login(password, request)
+	result = user.login(password, request)
 
-	redirect_url = request.session['referer']
+	redirect_url = request.session['referer'] if result else "/login/"
 
-	if not redirect_url:
-		return "/"
-
-	request.session.pop('referer', None)
+	if result:
+		if not redirect_url:
+			return "/"
+		request.session.pop('referer', None)
+	else:
+		print(request.session['referer'])
 
 	return redirect_url
 
@@ -162,13 +161,13 @@ def join(request: fastapi.Request):
 	context = dict()
 	context['request'] = request
 	context['title'] = "Join"
-	context['settings'] = settings
+	context['settings'] = core.settings
 	context['user'] = user
 	
 	if 'username' in request.session:
 		return fastapi.responses.RedirectResponse("/", status_code = 303)
 	
-	response = templates.TemplateResponse(f"{settings.skin}/join.html", context)
+	response = templates.TemplateResponse(f"{core.settings.skin}/join.html", context)
 
 	return response
 
@@ -190,5 +189,5 @@ def join_submit(
 
 @app.get("/", response_class = fastapi.responses.RedirectResponse, status_code = 308)
 def root(request: fastapi.Request):
-	title = settings.mainpage
+	title = core.settings.mainpage
 	return f"/view/{title}"
