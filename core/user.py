@@ -74,7 +74,7 @@ class User:
 
 		return True
 
-	def get_data(self):
+	def get_data(self) -> str:
 		user_data = dict()
 		user_data['existence'] = self.existence
 

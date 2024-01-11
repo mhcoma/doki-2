@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
-async def view(request: fastapi.Request, title: str):
+def view(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 	article.convert_markdown()
@@ -44,7 +44,7 @@ async def view(request: fastapi.Request, title: str):
 	return response
 
 @app.get("/edit/{title}", response_class = fastapi.responses.HTMLResponse)
-async def edit(request: fastapi.Request, title: str):
+def edit(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 
@@ -67,7 +67,7 @@ async def edit(request: fastapi.Request, title: str):
 
 
 @app.post("/edit-save/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def edit_save(
+def edit_save(
 	request: fastapi.Request,
 	title: str,
 	raw_data: str = fastapi.Form(None)
@@ -91,19 +91,19 @@ async def edit_save(
 	return f"/view/{title}"
 
 @app.get("/delete/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def delete(request: fastapi.Request, title: str):
+def delete(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.delete()
 	return f"/view/{title}"
 
 @app.get("/get_user/{username}", response_class = fastapi.responses.HTMLResponse)
-async def get_user(request: fastapi.Request, username: str):
+def get_user(request: fastapi.Request, username: str):
 	user = core.user.User(username)
 	result = user.get_data()
 	return result
 
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
-async def login(request: fastapi.Request):
+def login(request: fastapi.Request):
 	context = dict()
 	context['request'] = request
 	context['title'] = "Login"
@@ -121,7 +121,7 @@ async def login(request: fastapi.Request):
 	return response
 
 @app.post("/login-submit/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def login_submit(
+def login_submit(
 	response: fastapi.Response,
 	request: fastapi.Request,
 	username: str = fastapi.Form(),
@@ -140,7 +140,7 @@ async def login_submit(
 	return redirect_url
 
 @app.get("/logout/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def logout(request: fastapi.Request):
+def logout(request: fastapi.Request):
 
 	redirect_url = request.headers['referer']
 	request.session.pop('username', None)
@@ -152,7 +152,7 @@ async def logout(request: fastapi.Request):
 	return redirect_url
 
 @app.get("/join/", response_class = fastapi.responses.HTMLResponse)
-async def join(request: fastapi.Request):
+def join(request: fastapi.Request):
 
 	if 'username' in request.session:
 		user = core.user.User(request.session['username'])
@@ -173,7 +173,7 @@ async def join(request: fastapi.Request):
 	return response
 
 @app.post("/join-submit/", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-async def join_submit(
+def join_submit(
 	request: fastapi.Request,
 	username: str = fastapi.Form(),
 	password: str = fastapi.Form(),
@@ -189,6 +189,6 @@ async def join_submit(
 	return "/join/"
 
 @app.get("/", response_class = fastapi.responses.RedirectResponse, status_code = 308)
-async def root(request: fastapi.Request):
+def root(request: fastapi.Request):
 	title = settings.mainpage
 	return f"/view/{title}"
