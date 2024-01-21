@@ -22,11 +22,11 @@ $(window).on('load', function() {
 				let is_user_exist = false;
 				$.ajax(
 					{
-						url: `/get_user/${val}`,
+						url: `/is_user_exist/?username=${val}`,
 						dataType: 'json',
 						async: false,
 						success: function(user_data) {
-							is_user_exist = user_data.existence;
+							is_user_exist = user_data.is_user_exist;
 						}
 					}
 				);
@@ -45,10 +45,30 @@ $(window).on('load', function() {
 		'load change input',
 		function(event) {
 			let val = password_textbox.val();
+			let result = true;
 			if (val === '') {
 				password_textbox[0].setCustomValidity('Password is required.');
+				result = false;
 			}
 			else {
+				let can_login = false;
+				let username = username_textbox.val()
+				$.ajax(
+					{
+						url: `/can_login/?username=${username}&password=${val}`,
+						dataType: 'json',
+						async: false,
+						success: function(user_data) {
+							can_login = user_data.can_login;
+						}
+					}
+				)
+				if (!can_login) {
+					password_textbox[0].setCustomValidity('Password does not match.');
+					result = false;
+				}
+			}
+			if (result) {
 				password_textbox[0].setCustomValidity('');
 			}
 		}

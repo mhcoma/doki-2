@@ -57,18 +57,10 @@ class User:
 		return True
 	
 	def login(self, password: str, request: fastapi.Request) -> bool:
-		if not self.existence:
+		if not self.can_login(password):
 			return False
 
-		hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
-		hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
-
-		result = (hash_a == self.hash_a) and (hash_b == self.hash_b)
-
-		if not result:
-			return False
-
-		starlette.middleware.sessions
+		# starlette.middleware.sessions
 
 		session = request.session
 		session["username"] = self.username
@@ -76,9 +68,11 @@ class User:
 
 		return True
 
-	def get_data(self) -> str:
-		user_data = dict()
-		user_data['existence'] = self.existence
-
-		result = json.dumps(user_data)
-		return result
+	def is_user_exist(self) -> bool:
+		return self.existence
+	
+	def can_login(self, password: str) -> bool:
+		if not self.existence: return False
+		hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
+		hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
+		return (hash_a == self.hash_a) and (hash_b == self.hash_b)

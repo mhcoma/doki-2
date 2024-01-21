@@ -26,11 +26,11 @@ $(window).on('load', function() {
 				let is_user_exist = false;
 				$.ajax(
 					{
-						url: `/get_user/${val}`,
+						url: `/is_user_exist/?username=${val}`,
 						dataType: 'json',
 						async: false,
 						success: function(user_data) {
-							is_user_exist = user_data.existence;
+							is_user_exist = user_data.is_user_exist;
 						}
 					}
 				);

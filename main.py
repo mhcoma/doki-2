@@ -1,3 +1,5 @@
+import json
+
 import fastapi
 import fastapi.responses
 import fastapi.staticfiles
@@ -92,11 +94,19 @@ def delete(request: fastapi.Request, title: str):
 	article.delete()
 	return f"/view/{title}"
 
-@app.get("/get_user/{username}", response_class = fastapi.responses.HTMLResponse)
-def get_user(request: fastapi.Request, username: str):
+@app.get("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
+def is_user_exist(request: fastapi.Request, username: str):
 	user = core.user.User(username)
-	result = user.get_data()
-	return result
+	result = dict()
+	result['is_user_exist'] = user.is_user_exist()
+	return json.dumps(result)
+
+@app.get("/can_login/", response_class = fastapi.responses.HTMLResponse)
+def can_login(request: fastapi.Request, username: str, password: str):
+	user = core.user.User(username)
+	result = dict()
+	result['can_login'] = user.can_login(password)
+	return json.dumps(result)
 
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
 def login(request: fastapi.Request):
