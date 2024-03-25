@@ -6,12 +6,12 @@
 # Additional changes Copyright 2023 [Michael Back](https://github.com/mhcoma).
 # License: [BSD](https://opensource.org/licenses/bsd-license.php)
 
-import markdown
+from __future__ import annotations
+
 from markdown import Extension
 from markdown.inlinepatterns import InlineProcessor
 import xml.etree.ElementTree as etree
 import re
-import os
 
 import typing
 

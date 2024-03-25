@@ -61,33 +61,15 @@ a {
 	color: inherit;
 }
 
-input {
+input, button, textarea {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 	outline: none;
 }
 
-button {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	outline: none;
-}
-
-button:hover {
+button:hover, input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
 	cursor: pointer;
-}
-
-input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
-	cursor: pointer;
-}
-
-textarea {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	outline: none;
 }
 
 .pointer_cursor:hover {
@@ -177,15 +159,15 @@ header {
 	transition: all 0.1s;
 	float: left;
 	position: relative;
-}
 
-#header_search_bar:hover {
-	background-color: $bg_color_2;
-}
+	&:hover {
+		background-color: $bg_color_2;
+	}
 
-#header_search_bar:focus {
-	background-color: $bg_color_2;
-	color: $bg_color_0;
+	&:focus {
+		background-color: $bg_color_2;
+		color: $bg_color_0;
+	}
 }
 
 #header_search_btnbox {
@@ -202,21 +184,21 @@ header {
 	color: $bg_color_2;
 	border-right: 1px solid $base_color_15;
 	vertical-align: middle;
-}
 
-.btn_header:nth-last-child(1) {
-	border-right: none;
-}
+	&:nth-last-child(1) {
+		border-right: none;
+	}
 
-.btn_header:hover {
-	background-color: $base_color_05;
-	color: $bg_color_2;
-}
+	&:hover {
+		background-color: $base_color_05;
+		color: $bg_color_2;
+	}
 
-.btn_header img {
-	padding-top: 3px;
-	width: 16px;
-	height: 16px;
+	img {
+		padding-top: 3px;
+		width: 16px;
+		height: 16px;
+	}
 }
 
 section {
@@ -253,15 +235,15 @@ section {
 	background-color: $base_color_1;
 	color: $bg_color_2;
 	border-right: 1px solid $base_color_15;
-}
 
-.btn_content:nth-last-child(1) {
-	border-right: none;
-}
+	&:nth-last-child(1) {
+		border-right: none;
+	}
 
-.btn_content:hover {
-	background-color: $base_color_05;
-	color: $bg_color_2;
+	&:hover {
+		background-color: $base_color_05;
+		color: $bg_color_2;
+	}
 }
 
 .btn_content_sub {
@@ -269,14 +251,14 @@ section {
 	background-color: $base_color_1875;
 	color: $bg_color_0;
 	border-right: 1px solid $base_color_05;
-}
 
-.btn_content_sub:nth-last-child(1) {
-	border-right: none;
-}
+	&:nth-last-child(1) {
+		border-right: none;
+	}
 
-.btn_content_sub:hover {
-	background-color: $base_color_175;
+	&:hover {
+		background-color: $base_color_175;
+	}
 }
 
 $hr_color: $bg_color_05;
@@ -322,20 +304,20 @@ $hd_line: 1px solid $hr_color;
 	a {
 		color: $base_color_1;
 		transition: all 0.1s;
-	}
 
-	a:hover {
-		background-color: $base_color_1;
-		color: $bg_color_2;
-	}
+		&:hover {
+			background-color: $base_color_1;
+			color: $bg_color_2;
+		}
 
-	a.ne_wikilink {
-		color: $neg_color_1;
-	}
+		&.ne_wikilink {
+			color: $neg_color_1;
 
-	a.ne_wikilink:hover {
-		background-color: $neg_color_1;
-		color: $bg_color_2;
+			&:hover {
+				background-color: $neg_color_1;
+				color: $bg_color_2;
+			}
+		}
 	}
 
 	blockquote {
@@ -383,17 +365,26 @@ $hd_line: 1px solid $hr_color;
 			}
 		}
 	}
+
+	div.toc {
+		border: 1px solid $base_color_175;
+		width: fit-content;
+		padding: 16px;
+		span.toctitle {
+			font-size: 24px;
+		}
+	}
 }
 
 #editor_button_box {
 	width: 100%;
 	margin-bottom: 16px;
-}
 
-#editor_button_box::after {
-	content: '';
-	display: block;
-	clear: both;
+	&::after {
+		content: '';
+		display: block;
+		clear: both;
+	}
 }
 
 .btn_editor {
@@ -401,14 +392,14 @@ $hd_line: 1px solid $hr_color;
 	margin-right: 4px;
 	background-color: $base_color_1875;
 	color: $bg_color_0;
-}
 
-.btn_editor:nth-child(1) {
-	border-left: none;
-}
+	&:nth-child(1) {
+		border-left: none;
+	}
 
-.btn_editor:hover {
-	background-color: $base_color_175;
+	&:hover {
+		background-color: $base_color_175;
+	}
 }
 
 #editor_section_box {
@@ -421,12 +412,12 @@ $hd_line: 1px solid $hr_color;
 .editor_section {
 	display: none;
 	padding: 16px;
-}
 
-.editor_section:after {
-	display: block;
-	content: '';
-	clear: both;
+	&:after {
+		display: block;
+		content: '';
+		clear: both;
+	}
 }
 
 .lbl_editor_section {
@@ -448,17 +439,16 @@ $hd_line: 1px solid $hr_color;
 	background-color: $base_color_19375;
 	color: $base_color_05;
 	border: 1px solid $bg_color_025;
-}
 
-.text_editor_section:hover {
-	background-color: $bg_color_2;
-}
+	&:hover {
+		background-color: $bg_color_2;
+	}
 
-.text_editor_section:focus {
-	background-color: $bg_color_2;
-	color: $bg_color_0;
+	&:focus {
+		background-color: $bg_color_2;
+		color: $bg_color_0;
+	}
 }
-
 .radio_editor_section {
 	float: left;
 	margin: 4px 0;
@@ -468,11 +458,11 @@ $hd_line: 1px solid $hr_color;
 	border-radius: 50%;
 	width: 16px;
 	height: 16px;
-}
 
-.radio_editor_section:checked {
-	background-color: $bg_color_2;
-	border: 6px solid $base_color_1;
+	&:checked {
+		background-color: $bg_color_2;
+		border: 6px solid $base_color_1;
+	}
 }
 
 .select_editor_section {
@@ -486,15 +476,15 @@ $hd_line: 1px solid $hr_color;
 	background-color: $base_color_19375;
 	color: $base_color_05;
 	border: 1px solid $bg_color_025;
-}
 
-.select_editor_section:hover {
-	background-color: $bg_color_2;
-}
+	&:hover {
+		background-color: $bg_color_2;
+	}
 
-.select_editor_section:focus {
-	background-color: $bg_color_2;
-	color: $bg_color_0;
+	&:focus {
+		background-color: $bg_color_2;
+		color: $bg_color_0;
+	}
 }
 
 .editor_section_button_box {
@@ -506,15 +496,15 @@ $hd_line: 1px solid $hr_color;
 	background-color: $base_color_1;
 	color: $bg_color_2;
 	border-right: 1px solid $base_color_15;
-}
 
-.btn_editor_section:nth-last-child(1) {
-	border-right: none;
-}
+	&:nth-last-child(1) {
+		border-right: none;
+	}
 
-.btn_editor_section:hover {
-	background-color: $base_color_05;
-	color: $bg_color_2;
+	&:hover {
+		background-color: $base_color_05;
+		color: $bg_color_2;
+	}
 }
 
 #edit_area {
@@ -529,15 +519,15 @@ $hd_line: 1px solid $hr_color;
 	background-color: $base_color_19375;
 	color: $base_color_05;
 	border: 1px solid $bg_color_025;
-}
 
-#edit_area:hover {
-	background-color: $bg_color_2;
-}
+	&:hover {
+		background-color: $bg_color_2;
+	}
 
-#edit_area:focus {
-	background-color: $bg_color_2;
-	color: $bg_color_0;
+	&:focus {
+		background-color: $bg_color_2;
+		color: $bg_color_0;
+	}
 }
 
 #login_box {
@@ -560,15 +550,15 @@ $hd_line: 1px solid $hr_color;
 	background-color: $base_color_19375;
 	color: $base_color_05;
 	border: 1px solid $bg_color_025;
-}
 
-.login_textbox:hover {
-	background-color: $bg_color_2;
-}
+	&:hover {
+		background-color: $bg_color_2;
+	}
 
-.login_textbox:focus {
-	background-color: $bg_color_2;
-	color: $bg_color_0;
+	&:focus {
+		background-color: $bg_color_2;
+		color: $bg_color_0;
+	}
 }
 
 .login_checkbox {
@@ -580,11 +570,11 @@ $hd_line: 1px solid $hr_color;
 	transition: 0.1s all;
 	width: 16px;
 	height: 16px;
-}
 
-.login_checkbox:checked {
-	background-color: $bg_color_2;
-	border: 6px solid $base_color_1;
+	&:checked {
+		background-color: $bg_color_2;
+		border: 6px solid $base_color_1;
+	}
 }
 
 footer {

@@ -6,11 +6,11 @@ import shutil
 import markdown
 import markdown.extensions.fenced_code
 import markdown.extensions.codehilite
+import markdown.extensions.toc
 
 import core
 import core.wikilinks_plus
 import core.toc_plus
-import core.pygments_markdown
 
 class Article:
 	def __init__(self, title: str):
@@ -66,7 +66,7 @@ class Article:
 					noclasses = True,
 					pygments_style = core.settings.codehilite
 				),
-				core.toc_plus.TocPlusExtension(
+				markdown.extensions.toc.TocExtension(
 					title = "Table of Contents",
 					slugify = core.toc_plus.do_nothing
 				),
