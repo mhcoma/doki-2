@@ -53,13 +53,35 @@
 				List
 			</div>
 			<div class = "editor_section" id = "editor_table">
-				Table
+				<label class = "lbl_editor_section">Rows:
+					<input class = "text_editor_section" type = "number" id = "editor_table_rows" value = "2"  min = "1">
+				</label>
+				<label class = "lbl_editor_section">Columns:
+					<input class = "text_editor_section" type = "number" id = "editor_table_columns" value = "3" min = "1">
+				</label>
+				<label class = "lbl_editor_section">
+					<input class = "radio_editor_section" type = "radio" name = "editor_table_radio" value = "table_markdown" checked>Markdown table
+				</label>
+				<label class = "lbl_editor_section">
+					<input class = "radio_editor_section" type = "radio" name = "editor_table_radio" value = "table_html_with_thead">HTML table with table header
+				</label>
+				<label class = "lbl_editor_section">
+					<input class = "radio_editor_section" type = "radio" name = "editor_table_radio" value = "table_html_without_thead">HTML table without table header
+				</label>
+				<div class = "editor_section_button_box">
+					<button class = "btn btn_editor_section" type = "button" onclick = "editor_close_section()">Cancel</button>
+					<button class = "btn btn_editor_section" type = "button" onclick = "editor_insert_table()">Create Table</button>
+				</div>
 			</div>
 			<div class = "editor_section" id = "editor_fenced_code">
 				<label class = "lbl_editor_section">Language:
 					<select class = "select_editor_section" name = "editor_fenced_code_language">
 						{% for language_name, short_name in editor_data.codehilite_lexers %}
-							<option value = "{{ short_name }}">{{ language_name }}</option>
+							{% if language_name != "" %}
+								<option value = "{{ short_name }}">{{ language_name }}</option>
+							{% else %}
+								<hr>
+							{% endif %}
 						{% endfor %}
 					</select>
 				</label>

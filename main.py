@@ -41,6 +41,23 @@ def view(request: fastapi.Request, title: str):
 
 	return response
 
+@app.get("/source/{title}", response_class = fastapi.responses.HTMLResponse)
+def view_source(request: fastapi.Request, title: str):
+	article = core.article.Article(title)
+	article.load()
+
+	context = dict()
+	context['request'] = request
+	context['title'] = f"View source for {title}"
+	context['article'] = article
+	context['settings'] = core.settings
+	context['editor_data'] = core.editor_data
+
+	response = templates.TemplateResponse(f"{core.settings.skin}/source.html", context)
+
+	return response
+
+
 @app.get("/edit/{title}", response_class = fastapi.responses.HTMLResponse)
 def edit(request: fastapi.Request, title: str):
 	article = core.article.Article(title)

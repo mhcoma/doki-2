@@ -365,6 +365,24 @@ $hd_line: 1px solid $hr_color;
 		font-family: "D2Coding", courier, monospace;
 		padding: 0 4px;
 	}
+
+	table {
+		border-collapse: collapse;
+		th, td {
+			border: 1px solid $base_color_175;
+			padding: 8px;
+			
+		}
+		thead tr {
+			background-color: $base_color_1875;
+		}
+		tbody tr {
+			background-color: $base_color_2;
+			&:nth-of-type(even) {
+				background-color: $base_color_19375;
+			}
+		}
+	}
 }
 
 #editor_button_box {

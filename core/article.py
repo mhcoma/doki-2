@@ -62,7 +62,10 @@ class Article:
 					find_article = find_article
 				),
 				markdown.extensions.fenced_code.FencedCodeExtension(),
-				markdown.extensions.codehilite.CodeHiliteExtension(),
+				markdown.extensions.codehilite.CodeHiliteExtension(
+					noclasses = True,
+					pygments_style = core.settings.codehilite
+				),
 				core.toc_plus.TocPlusExtension(
 					title = "Table of Contents",
 					slugify = core.toc_plus.do_nothing

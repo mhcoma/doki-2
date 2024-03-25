@@ -304,6 +304,22 @@ section {
   font-family: "D2Coding", courier, monospace;
   padding: 0 4px;
 }
+#content table {
+  border-collapse: collapse;
+}
+#content table th, #content table td {
+  border: 1px solid rgb(207, 223, 255);
+  padding: 8px;
+}
+#content table thead tr {
+  background-color: rgb(231, 239, 255);
+}
+#content table tbody tr {
+  background-color: rgb(255, 255, 255);
+}
+#content table tbody tr:nth-of-type(even) {
+  background-color: rgb(243, 247, 255);
+}
 
 #editor_button_box {
   width: 100%;

@@ -20,6 +20,10 @@ let editor_link_target;
 let editor_link_display;
 let editor_link_radio;
 
+let editor_table_rows;
+let editor_table_columns;
+let editor_table_radio;
+
 let editor_fenced_code_language;
 
 let keydown_shift = false;
@@ -28,10 +32,29 @@ $(window).on('load', function() {
 	editor_section_box = $('#editor_section_box')[0];
 	editor_link_target = $('#editor_link_target')[0];
 	editor_link_display = $('#editor_link_display')[0];
+
 	editor_link_radio = $('[name = "editor_link_radio"]');
+
+	editor_table_rows = $('#editor_table_rows');
+	editor_table_columns = $('#editor_table_columns');
+	editor_table_radio = $('[name = "editor_table_radio"]');
+
+	editor_table_rows.on('load change input', function(event) {
+		validate_int_input(editor_table_rows);
+	})
+	editor_table_columns.on('load change input', function(event) {
+		validate_int_input(editor_table_columns);
+	})
+
 	editor_fenced_code_language = $('[name = "editor_fenced_code_language"]')
+
 	edit_area = $('#edit_area')[0];
 });
+
+function validate_int_input(input_obj) {
+	val = input_obj.val();
+	input_obj.val(parseInt(val));
+}
 
 function editor_italic() {
 	editor_select_insert_single(
@@ -205,7 +228,7 @@ function editor_insert_link() {
 			break;
 		}
 	}
-	let link_text = ''
+	let link_text = '';
 	if (link_display == '') {
 		if (link_radio == 0) {
 			link_text = '[[' + link_target + ']]';
@@ -236,6 +259,65 @@ function editor_insert_fenced_code() {
 	);
 
 	edit_area.focus();
+
+	editor_close_section();
+}
+
+function editor_insert_table() {
+	let table_rows = editor_table_rows.val();
+	let table_colums = editor_table_columns.val();
+
+	let table_radio = 0;
+	for (var i = 0; i < editor_table_radio.length; i++) {
+		if (editor_table_radio[i].checked) {
+			table_radio = i;
+			break;
+		}
+	}
+
+	let table_text = '';
+
+	if (table_radio == 0) {
+		for (var i = 0; i < table_rows; i++) {
+			for (var j = 0; j < table_colums; j++) {
+				table_text += "|   ";
+			}
+			table_text += "|\n";
+			if (i == 0) {
+				for (var j = 0; j < table_colums; j++) {
+					table_text += "|---";
+				}
+				table_text += "|\n";
+			}
+		}
+	}
+	else {
+		table_text += "<table>\n";
+
+		if (table_radio == 1) {
+			table_text += "\t<thead>\n\t\t<tr>\n";
+			for (var i = 0; i < table_colums; i++) {
+				table_text += "\t\t\t<th>   </th>\n"
+			}
+			table_text += "\t\t</tr>\n\t</thead>\n";
+			table_rows--;
+		}
+
+		table_text += "\t<tbody>\n";
+		for (var i = 0; i < table_rows; i++) {
+			table_text += "\t\t<tr>\n";
+			for (var j = 0; j < table_colums; j++) {
+				table_text += "\t\t\t<td>   </td>\n"
+			}
+			table_text += "\t\t</tr>\n";
+		}
+		table_text += "\t</tbody>\n";
+
+		table_text += "</table>\n";
+	}
+
+	edit_area.focus();
+	document.execCommand('insertText', false, table_text);
 
 	editor_close_section();
 }
