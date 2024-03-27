@@ -1,4 +1,5 @@
 import datetime
+import enum
 import json
 import os
 import shutil
@@ -11,6 +12,8 @@ import markdown.extensions.toc
 import core
 import core.wikilinks_plus
 import core.toc_plus
+import core.user
+import core.utils
 
 class Article:
 	def __init__(self, title: str):
@@ -26,15 +29,14 @@ class Article:
 		self.history_filename = os.path.join(self.directory_name, "history.json")
 		self.history_data = []
 
+		self.acl_filename = os.path.join(self.directory_name, "acl.json")
+		self.acl_data = core.settings.default_acl.copy()
+
 	def load(self):
 		if os.path.isfile(self.article_filename):
-			article_file = open(self.article_filename, 'r', encoding = "utf-8")
-			self.article_data = json.load(article_file)
-			article_file.close()
-
-			history_file = open(self.history_filename, 'r', encoding = "utf-8")
-			self.history_data = json.load(history_file)
-			history_file.close()
+			self.article_data = core.utils.load_json_file(self.article_filename)
+			self.history_data = core.utils.load_json_file(self.history_filename)
+			self.acl_data = core.utils.load_json_file(self.acl_filename)
 
 			edition = self.article_data['edition']
 			for i in range(edition, -1, -1):
@@ -47,9 +49,8 @@ class Article:
 					md_file.close()
 				break
 			self.article_data['edition'] = edition
-			article_file = open(self.article_filename, 'w', encoding = "utf-8")
-			json.dump(self.article_data, article_file, indent = '\t')
-			article_file.close()
+
+			core.utils.save_json_file(self.article_data, self.article_filename)
 
 	def convert_markdown(self):
 		self.data = markdown.markdown(
@@ -74,8 +75,8 @@ class Article:
 			]
 		)
 	
-	def save(self, user: str):
-		now = datetime.datetime.utcnow().isoformat()
+	def save(self, username: str):
+		now = datetime.datetime.now(datetime.UTC).isoformat()
 		if not self.existence:
 			self.article_data = {
 				'edition' : 0,
@@ -90,7 +91,7 @@ class Article:
 		self.history_data.append(
 			{
 				'edition' : self.article_data['edition'],
-				'editor' : user,
+				'editor' : username,
 				'date' : now
 			}
 		)
@@ -103,15 +104,24 @@ class Article:
 		md_file.write(self.raw_data)
 		md_file.close()
 
-		article_file = open(self.article_filename, 'w', encoding = "utf-8")
-		json.dump(self.article_data, article_file, indent = '\t')
-
-		history_file = open(self.history_filename, 'w', encoding = 'utf-8')
-		json.dump(self.history_data, history_file, indent = '\t')
+		core.utils.save_json_file(self.article_data, self.article_filename)
+		core.utils.save_json_file(self.history_data, self.history_filename)
+		core.utils.save_json_file(self.acl_data, self.acl_filename)
 
 	def delete(self):
 		if os.path.isdir(self.directory_name):
 			shutil.rmtree(self.directory_name)
+	
+	def is_accessable(self, key: str, user: core.user.User | None) -> bool:
+		if user == None:
+			return self.acl_data[key] <= core.utils.AccessLevel.ANONYMOUS
+		else:
+			if self.acl_data[key] <= core.utils.AccessLevel.NOOB:
+				return True
+			elif self.acl_data[key] <= core.utils.AccessLevel.USER:
+				return user.is_not_noob()
+			else:
+				return user.is_admin
 
 def find_article(title):
 	article = Article(title)

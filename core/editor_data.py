@@ -1,7 +1,5 @@
 import pygments.lexers
 
-import core
-
 class EditorData:
 	codehilite_lexers: list[tuple[str, str]]
 	major_languages: tuple[str, ...]

@@ -1,11 +1,13 @@
 import hashlib
 import json
 import os
+import datetime
 
 import fastapi
 import starlette.middleware.sessions
 
 import core
+import core.utils
 
 users_directory = os.path.join(core.base_dir, "users")
 
@@ -16,7 +18,7 @@ class User:
 		self.existence = os.path.isfile(self.user_filename)
 
 		self.email = email
-		self.is_admin = False
+		self.is_admin: bool = False
 		
 		if password:
 			self.hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
@@ -25,6 +27,7 @@ class User:
 		if self.existence:
 			user_file = open(self.user_filename, 'r', encoding = "utf-8")
 			user_data = json.load(user_file)
+			user_file.close()
 			
 			if not password:
 				self.hash_a = user_data['hash_a']
@@ -34,8 +37,10 @@ class User:
 				self.email = user_data['email']
 			
 			self.is_admin = user_data['is_admin']
+
+			self.join_date = datetime.datetime.fromisoformat(user_data['join_date'])
 			
-			user_file.close()
+			self.group = user_data['group']
 
 	def join(self) -> bool:
 		if self.existence:
@@ -47,12 +52,13 @@ class User:
 		user_data['hash_a'] = self.hash_a
 		user_data['hash_b'] = self.hash_b
 		user_data['is_admin'] = False
+		user_data['join_date'] = datetime.datetime.now(datetime.UTC).isoformat()
+		user_data['group'] = []
 
 		if not os.path.isdir(users_directory):
 			os.makedirs(users_directory)
-		user_file = open(self.user_filename, 'w', encoding = "utf-8")
-		json.dump(user_data, user_file, indent = '\t')
-		user_file.close()
+
+		core.utils.save_json_file(user_data, self.user_filename)
 
 		return True
 	
@@ -76,3 +82,18 @@ class User:
 		hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
 		hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
 		return (hash_a == self.hash_a) and (hash_b == self.hash_b)
+	
+	def is_not_noob(self) -> bool:
+		return self.join_date + datetime.timedelta(days = 15) <= datetime.datetime.now()
+
+def get_user_from_request(request: fastapi.Request) -> tuple[User | None, str]:
+	if 'username' in request.session:
+		username = request.session['username']
+		return User(username), username
+	else:
+		client = request.client
+		if not client is None:
+			username = client.host
+		else:
+			username = "Unknown"
+		return (None, username)

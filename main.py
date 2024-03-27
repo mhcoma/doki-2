@@ -9,6 +9,7 @@ import starlette.middleware.sessions
 import core
 import core.article
 import core.user
+import core.utils
 
 app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
@@ -25,10 +26,7 @@ def view(request: fastapi.Request, title: str):
 	article.load()
 	article.convert_markdown()
 
-	if 'username' in request.session:
-		user = core.user.User(request.session['username'])
-	else:
-		user = None
+	user, username = core.user.get_user_from_request(request)
 
 	context = dict()
 	context['request'] = request
@@ -63,10 +61,11 @@ def edit(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 
-	if 'username' in request.session:
-		user = core.user.User(request.session['username'])
-	else:
-		user = None
+	user, username = core.user.get_user_from_request(request)
+
+	is_editable = article.is_accessable('edit', user)
+	if not is_editable:
+		return fastapi.responses.RedirectResponse(f"/source/{title}")
 
 	context = dict()
 	context['request'] = request
@@ -87,28 +86,32 @@ def edit_save(
 	title: str,
 	raw_data: str = fastapi.Form(None)
 ):
-
-	client = request.client
-	if not client is None:
-		user = client.host
-	else:
-		user = "Unknown"
+	user, username = core.user.get_user_from_request(request)
 
 	article = core.article.Article(title)
 	article.load()
-	if raw_data is None:
-		raw_data = ""
-	raw_data = raw_data.replace('\r', '')
-	raw_data = raw_data.strip()
-	if not article.existence or raw_data != article.raw_data:
-		article.raw_data = raw_data
-		article.save(user)
+
+	is_editable = article.is_accessable('edit', user)
+
+	if is_editable:
+		if raw_data is None:
+			raw_data = ""
+		raw_data = raw_data.replace('\r', '').strip()
+		if not article.existence or raw_data != article.raw_data:
+			article.raw_data = raw_data
+			article.save(username)
+	
 	return f"/view/{title}"
 
 @app.get("/delete/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
 def delete(request: fastapi.Request, title: str):
+	user, username = core.user.get_user_from_request(request)
+
 	article = core.article.Article(title)
-	article.delete()
+	is_deletable = article.is_accessable('delete', user)
+
+	if is_deletable:
+		article.delete()
 	return f"/view/{title}"
 
 @app.get("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
@@ -179,11 +182,7 @@ def logout(request: fastapi.Request):
 
 @app.get("/join/", response_class = fastapi.responses.HTMLResponse)
 def join(request: fastapi.Request):
-
-	if 'username' in request.session:
-		user = core.user.User(request.session['username'])
-	else:
-		user = None
+	user, username = core.user.get_user_from_request(request)
 
 	context = dict()
 	context['request'] = request
