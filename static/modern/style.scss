@@ -400,6 +400,10 @@ $hd_line: 1px solid $hr_color;
 	&:hover {
 		background-color: $base_color_175;
 	}
+
+	&.btn_editor_focused {
+		background-color: $bg_color_175;
+	}
 }
 
 #editor_section_box {

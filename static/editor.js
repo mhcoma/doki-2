@@ -338,16 +338,15 @@ function editor_extend_box(id, btn) {
 		}
 	}
 	if (editor_button_section_focused != undefined) {
-		editor_button_section_focused.removeAttribute('style');
+		editor_button_section_focused.classList.remove('btn_editor_focused');
 	}
 	if (editor_button_section_focused != btn) {
 		editor_button_section_focused = btn;
-		editor_button_section_focused.style.backgroundColor = '#dfdfdf';
+		editor_button_section_focused.classList.add('btn_editor_focused');
 		block_section.style.display = 'block';
 	}
 	else {
 		block_section.style.display = 'none';
-		btn.removeAttribute('style');
 		editor_button_section_focused = undefined;
 	}
 	btn.blur();
