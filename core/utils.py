@@ -10,24 +10,30 @@ class AccessLevel(int, enum.Enum):
 	NOOB = 1
 	USER = 2
 	ADMIN = 3
+
 	def __lt__(self, other):
 		if self.__class__ is other.__class__:
 			return self.value < other.value
 		return NotImplemented
+	
 	def __le__(self, other):
 		if self.__class__ is other.__class__:
 			return self.value <= other.value
 		return NotImplemented
+	
 	def __gt__(self, other):
 		if self.__class__ is other.__class__:
 			return self.value > other.value
 		return NotImplemented
+	
 	def __ge__(self, other):
 		if self.__class__ is other.__class__:
 			return self.value >= other.value
 		return NotImplemented
+	
 	def __str__(self):
 		return self.name.upper()
+	
 	@classmethod
 	def _missing_(cls, value):
 		if type(value) is str:

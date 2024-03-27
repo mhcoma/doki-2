@@ -5,6 +5,11 @@ class EditorData:
 	major_languages: tuple[str, ...]
 	alternative_names: dict[str, str]
 
+	def __new__(cls, *args, **kwargs):
+		if not hasattr(cls, "_instance"):
+			cls._instance = super().__new__(cls)
+		return cls._instance        
+
 	def __init__(self):
 		self.major_languages = (
 			"ABAP",
@@ -170,3 +175,5 @@ class EditorData:
 		if name in self.alternative_names:
 			return self.alternative_names[name]
 		return name
+	
+instance = EditorData()

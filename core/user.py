@@ -2,31 +2,47 @@ import hashlib
 import json
 import os
 import datetime
+import typing
 
 import fastapi
-import starlette.middleware.sessions
 
 import core
 import core.utils
 
 users_directory = os.path.join(core.base_dir, "users")
 
+class UserData(typing.TypedDict):
+	username: str
+	hash_a: str
+	hash_b: str
+	email: str
+	is_admin: bool
+	join_date: str
+	group: list[str]
+
 class User:
+	username: str
+	hash_a: str
+	hash_b: str
+	email: str
+	is_admin: bool
+	group: list[str]
+
 	def __init__(self, username: str, password: str | None = None, email: str | None = None):
 		self.username = username
 		self.user_filename = os.path.join(users_directory, f"{self.username}.json")
 		self.existence = os.path.isfile(self.user_filename)
 
-		self.email = email
+		self.email: str = email if email != None else ""
 		self.is_admin: bool = False
-		
+
 		if password:
 			self.hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
 			self.hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
 
 		if self.existence:
 			user_file = open(self.user_filename, 'r', encoding = "utf-8")
-			user_data = json.load(user_file)
+			user_data: UserData = json.load(user_file)
 			user_file.close()
 			
 			if not password:
@@ -46,14 +62,15 @@ class User:
 		if self.existence:
 			return False
 
-		user_data = dict()
-		user_data['username'] = self.username
-		user_data['email'] = self.email
-		user_data['hash_a'] = self.hash_a
-		user_data['hash_b'] = self.hash_b
-		user_data['is_admin'] = False
-		user_data['join_date'] = datetime.datetime.now(datetime.UTC).isoformat()
-		user_data['group'] = []
+		user_data: UserData = {
+			'username': self.username,
+			'hash_a': self.hash_a,
+			'hash_b': self.hash_b,
+			'email': self.email,
+			'is_admin': False,
+			'join_date': datetime.datetime.now(datetime.UTC).isoformat(),
+			'group': []
+		}
 
 		if not os.path.isdir(users_directory):
 			os.makedirs(users_directory)
@@ -65,8 +82,6 @@ class User:
 	def login(self, password: str, request: fastapi.Request) -> bool:
 		if not self.can_login(password):
 			return False
-
-		# starlette.middleware.sessions
 
 		session = request.session
 		session["username"] = self.username

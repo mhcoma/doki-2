@@ -13,6 +13,11 @@ class Setting:
 	secret_key: str
 	default_acl: dict[str, core.utils.AccessLevel]
 
+	def __new__(cls, *args, **kwargs):
+		if not hasattr(cls, "_instance"):
+			cls._instance = super().__new__(cls)
+		return cls._instance
+
 	def __init__(self):
 		settings_path = os.path.join(core.base_dir, "settings");
 		settings_filename = os.path.join(settings_path, "settings.json")
@@ -51,3 +56,5 @@ class Setting:
 		self.codehilite = settings_data['codehilite']
 		self.secret_key = settings_data['secret_key']
 		self.default_acl = settings_data['default_acl']
+
+instance = Setting()

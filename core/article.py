@@ -14,6 +14,7 @@ import core.wikilinks_plus
 import core.toc_plus
 import core.user
 import core.utils
+import core.settings
 
 class Article:
 	def __init__(self, title: str):
@@ -30,7 +31,7 @@ class Article:
 		self.history_data = []
 
 		self.acl_filename = os.path.join(self.directory_name, "acl.json")
-		self.acl_data = core.settings.default_acl.copy()
+		self.acl_data = core.settings.instance.default_acl.copy()
 
 	def load(self):
 		if os.path.isfile(self.article_filename):
@@ -65,7 +66,7 @@ class Article:
 				markdown.extensions.fenced_code.FencedCodeExtension(),
 				markdown.extensions.codehilite.CodeHiliteExtension(
 					noclasses = True,
-					pygments_style = core.settings.codehilite
+					pygments_style = core.settings.instance.codehilite
 				),
 				markdown.extensions.toc.TocExtension(
 					title = "Table of Contents",

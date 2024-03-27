@@ -1,4 +1,5 @@
 import json
+import typing
 
 import fastapi
 import fastapi.responses
@@ -10,6 +11,9 @@ import core
 import core.article
 import core.user
 import core.utils
+import core.settings
+import core.editor_data
+
 
 app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
@@ -17,7 +21,7 @@ app.mount("/static", fastapi.staticfiles.StaticFiles(directory = "static"), name
 
 app.add_middleware(
 	starlette.middleware.sessions.SessionMiddleware,
-	secret_key = core.settings.secret_key
+	secret_key = core.settings.instance.secret_key
 )
 
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
@@ -28,14 +32,16 @@ def view(request: fastapi.Request, title: str):
 
 	user, username = core.user.get_user_from_request(request)
 
-	context = dict()
-	context['request'] = request
-	context['title'] = title
-	context['article'] = article
-	context['settings'] = core.settings
-	context['user'] = user
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': title,
+		'article': article,
+		'settings': core.settings.instance,
+		'user': user,
+		'editor_data': None
+	}
 	
-	response = templates.TemplateResponse(f"{core.settings.skin}/view.html", context)
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/view.html", context)
 
 	return response
 
@@ -44,14 +50,16 @@ def view_source(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 
-	context = dict()
-	context['request'] = request
-	context['title'] = f"View source for {title}"
-	context['article'] = article
-	context['settings'] = core.settings
-	context['editor_data'] = core.editor_data
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': f"View source for {title}",
+		'article': article,
+		'settings': core.settings.instance,
+		'user': None,
+		'editor_data': core.editor_data.instance
+	}
 
-	response = templates.TemplateResponse(f"{core.settings.skin}/source.html", context)
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/source.html", context)
 
 	return response
 
@@ -66,16 +74,17 @@ def edit(request: fastapi.Request, title: str):
 	is_editable = article.is_accessable('edit', user)
 	if not is_editable:
 		return fastapi.responses.RedirectResponse(f"/source/{title}")
-
-	context = dict()
-	context['request'] = request
-	context['title'] = f"Edit {title}"
-	context['article'] = article
-	context['settings'] = core.settings
-	context['user'] = user
-	context['editor_data'] = core.editor_data
 	
-	response = templates.TemplateResponse(f"{core.settings.skin}/edit.html", context)
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': f"Edit {title}",
+		'article': article,
+		'settings': core.settings.instance,
+		'user': user,
+		'editor_data': core.editor_data.instance
+	}
+	
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/edit.html", context)
 
 	return response
 
@@ -130,10 +139,15 @@ def can_login(request: fastapi.Request, username: str, password: str):
 
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
 def login(request: fastapi.Request):
-	context = dict()
-	context['request'] = request
-	context['title'] = "Login"
-	context['settings'] = core.settings
+
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': None,
+		'article': None,
+		'settings': core.settings.instance,
+		'user': None,
+		'editor_data': core.editor_data.instance
+	}
 
 	if 'username' in request.session:
 		redirect_url = "/"
@@ -143,7 +157,7 @@ def login(request: fastapi.Request):
 		http_referer = request.headers['referer']
 		request.session['referer'] = http_referer
 	
-	response = templates.TemplateResponse(f"{core.settings.skin}/login.html", context)
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/login.html", context)
 
 	return response
 
@@ -184,16 +198,19 @@ def logout(request: fastapi.Request):
 def join(request: fastapi.Request):
 	user, username = core.user.get_user_from_request(request)
 
-	context = dict()
-	context['request'] = request
-	context['title'] = "Join"
-	context['settings'] = core.settings
-	context['user'] = user
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': "Join",
+		'article': None,
+		'settings': core.settings.instance,
+		'user': user,
+		'editor_data': None
+	}
 	
 	if 'username' in request.session:
 		return fastapi.responses.RedirectResponse("/", status_code = 303)
 	
-	response = templates.TemplateResponse(f"{core.settings.skin}/join.html", context)
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/join.html", context)
 
 	return response
 
@@ -215,5 +232,5 @@ def join_submit(
 
 @app.get("/", response_class = fastapi.responses.RedirectResponse, status_code = 308)
 def root(request: fastapi.Request):
-	title = core.settings.mainpage
+	title = core.settings.instance.mainpage
 	return f"/view/{title}"
