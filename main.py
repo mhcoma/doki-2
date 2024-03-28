@@ -32,13 +32,19 @@ def view(request: fastapi.Request, title: str):
 
 	user, username = core.user.get_user_from_request(request)
 
+	is_editable = article.is_accessable('edit', user)
+	is_deletable = article.is_accessable('delete', user)
+	is_movable = article.is_accessable('move', user)
+
 	context: dict[str, typing.Any] = {
 		'request': request,
 		'title': title,
 		'article': article,
 		'settings': core.settings.instance,
 		'user': user,
-		'editor_data': None
+		'is_editable': is_editable,
+		'is_deletable': is_deletable,
+		'is_movable': is_movable
 	}
 	
 	response = templates.TemplateResponse(f"{core.settings.instance.skin}/view.html", context)
@@ -50,12 +56,14 @@ def view_source(request: fastapi.Request, title: str):
 	article = core.article.Article(title)
 	article.load()
 
+	user, username = core.user.get_user_from_request(request)
+
 	context: dict[str, typing.Any] = {
 		'request': request,
 		'title': f"View source for {title}",
 		'article': article,
 		'settings': core.settings.instance,
-		'user': None,
+		'user': user,
 		'editor_data': core.editor_data.instance
 	}
 
@@ -142,10 +150,7 @@ def login(request: fastapi.Request):
 
 	context: dict[str, typing.Any] = {
 		'request': request,
-		'title': None,
-		'article': None,
 		'settings': core.settings.instance,
-		'user': None,
 		'editor_data': core.editor_data.instance
 	}
 
@@ -201,10 +206,8 @@ def join(request: fastapi.Request):
 	context: dict[str, typing.Any] = {
 		'request': request,
 		'title': "Join",
-		'article': None,
 		'settings': core.settings.instance,
 		'user': user,
-		'editor_data': None
 	}
 	
 	if 'username' in request.session:

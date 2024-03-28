@@ -216,11 +216,39 @@ section {
 	padding: 16px;
 }
 
-.content_button_box {
+@include coma.mobile {
+	.content_button_box {
+		float: none;
+		width: inherit;
+		overflow: auto;
+		.btn_content {
+			margin-bottom: 8px;
+		}
+	}
+	.content_button_box_inner {
+		float: right;
+	}
+}
+
+@include coma.tablet_desktop {
+	.content_button_box {
+		float: right;
+		width: inherit;
+		overflow: visible;
+		.btn_content {
+			margin-bottom: 0px;
+		}
+	}
+	.content_button_box_inner {
+		float: none;
+	}
+}
+
+.content_form_button_box {
 	float: right;
 }
 
-.content_button_box_wrapper {
+.content_form_button_box_wrapper {
 	float: left;
 }
 
@@ -228,6 +256,8 @@ section {
 	font-weight: bold;
 	font-size: 32px;
 	line-height: 32px;
+	padding-right: 16px;
+	margin: 0 auto;
 }
 
 .btn_content {

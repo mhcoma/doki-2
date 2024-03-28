@@ -3,12 +3,14 @@
 {% block content %}
 
 <div id = "content_title_box">
-	<span id = "content_title_text">{{ title }}</span>
 	<div class = "content_button_box">
-		<button class = "btn btn_content" type = "button" onclick = "location.href = '/view/{{ article.title }}'">
-			View
-		</button>
+		<div class = "content_button_box_inner">
+			<button class = "btn btn_content" type = "button" onclick = "location.href = '/view/{{ article.title }}'">
+				View
+			</button>
+		</div>
 	</div>
+	<span id = "content_title_text">{{ title }}</span>
 </div>
 
 <hr>
