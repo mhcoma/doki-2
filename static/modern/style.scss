@@ -94,7 +94,8 @@ header {
 	font-size: 14px;
 	padding: 0 16px;
 	border-style: none;
-	transition: all 0.1s;
+	transition:
+		background-color 0.1s;
 }
 
 #header_center {
@@ -244,14 +245,6 @@ section {
 	}
 }
 
-.content_form_button_box {
-	float: right;
-}
-
-.content_form_button_box_wrapper {
-	float: left;
-}
-
 #content_title_text {
 	font-weight: bold;
 	font-size: 32px;
@@ -276,18 +269,27 @@ section {
 	}
 }
 
-.btn_content_sub {
+.content_form_button_box {
+	float: right;
+}
+
+.btn_content_sub_wrapper {
 	float: left;
-	background-color: $base_color_1875;
-	color: $bg_color_0;
-	border-right: 1px solid $base_color_05;
 
-	&:nth-last-child(1) {
-		border-right: none;
-	}
+	.btn_content {
+		float: left;
+		background-color: $base_color_1875;
+		color: $bg_color_0;
+		border-right: 1px solid $base_color_05;
 
-	&:hover {
-		background-color: $base_color_175;
+		&:nth-last-child(1) {
+			border-right: none;
+		}
+
+		&:hover {
+			background-color: $base_color_175;
+			color: $bg_color_0;
+		}
 	}
 }
 

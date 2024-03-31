@@ -13,17 +13,23 @@
 						Create
 					{% endif %}
 				</button>
+			{% elif article.existence %}
+				<button class = "btn btn_content" type = "button" onclick = "location.href = '/source/{{ article.title }}'">
+					View Source
+				</button>
 			{% endif %}
 			{% if article.existence %}
 				<button class = "btn btn_content" type = "button" onclick = "location.href = '/discuss/{{ article.title }}'">
 					Discuss
 				</button>
-				<button class = "btn btn_content" type = "button" onclick = "location.href = '/source/{{ article.title }}'">
-					View Source
-				</button>
 				<button class = "btn btn_content" type = "button" onclick = "location.href = '/history/{{ article.title }}'">
 					History
 				</button>
+				{% if is_movable %}
+					<button class = "btn btn_content" type = "button" onclick = "location.href = '/move/{{ article.title }}'">
+						Move
+					</button>
+				{% endif %}
 				{% if is_deletable %}
 					<button class = "btn btn_content" type = "button" onclick = "location.href = '/delete/{{ article.title }}'">
 						Delete
