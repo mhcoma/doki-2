@@ -56,11 +56,11 @@
 					</div>
 					<form id = "header_search_form" method = "get" action = "/search-go/">
 						<div id = "header_search_box">
-							<input type = "search" name = "search" id = "header_search_bar">
+							<input type = "search" name = "search_text" id = "header_search_bar">
 							<div id = "header_search_button_box">
 								<input type = "submit" value = "enter" style = "display: none;">
-								<button class = "btn btn_header" onclick="location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
-								<button class = "btn btn_header" onclick="location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
+								<button class = "btn btn_header" type = "button" onclick = "location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
+								<button class = "btn btn_header" type = "button" onclick = "location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
 							</div>
 						</div>
 					</form>

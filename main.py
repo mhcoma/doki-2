@@ -1,6 +1,8 @@
 import json
 import typing
 
+import os
+
 import fastapi
 import fastapi.responses
 import fastapi.staticfiles
@@ -24,11 +26,15 @@ app.add_middleware(
 	secret_key = core.settings.instance.secret_key
 )
 
+@app.get("/view", response_class = fastapi.responses.RedirectResponse)
+@app.get("/view/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/view/{title}", response_class = fastapi.responses.HTMLResponse)
-def view(request: fastapi.Request, title: str):
+def view(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
 	article = core.article.Article(title)
 	article.load()
-	article.convert_markdown()
+	article.render_markdown()
 
 	user, username = core.user.get_user_from_request(request)
 
@@ -51,8 +57,13 @@ def view(request: fastapi.Request, title: str):
 
 	return response
 
+@app.get("/source", response_class = fastapi.responses.RedirectResponse)
+@app.get("/source/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/source/{title}", response_class = fastapi.responses.HTMLResponse)
-def view_source(request: fastapi.Request, title: str):
+def view_source(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
 	article = core.article.Article(title)
 	article.load()
 
@@ -71,9 +82,12 @@ def view_source(request: fastapi.Request, title: str):
 
 	return response
 
-
+@app.get("/edit", response_class = fastapi.responses.RedirectResponse)
+@app.get("/edit/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/edit/{title}", response_class = fastapi.responses.HTMLResponse)
-def edit(request: fastapi.Request, title: str):
+def edit(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
 	article = core.article.Article(title)
 	article.load()
 
@@ -96,13 +110,17 @@ def edit(request: fastapi.Request, title: str):
 
 	return response
 
-
+@app.get("/edit-save", response_class = fastapi.responses.RedirectResponse)
+@app.get("/edit-save/", response_class = fastapi.responses.RedirectResponse)
 @app.post("/edit-save/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
 def edit_save(
 	request: fastapi.Request,
-	title: str,
+	title: typing.Optional[str] = None,
 	raw_data: str = fastapi.Form(None)
 ):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
 	user, username = core.user.get_user_from_request(request)
 
 	article = core.article.Article(title)
@@ -120,8 +138,13 @@ def edit_save(
 	
 	return f"/view/{title}"
 
+@app.get("/delete", response_class = fastapi.responses.RedirectResponse)
+@app.get("/delete/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/delete/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
-def delete(request: fastapi.Request, title: str):
+def delete(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
 	user, username = core.user.get_user_from_request(request)
 
 	article = core.article.Article(title)
@@ -130,6 +153,16 @@ def delete(request: fastapi.Request, title: str):
 	if is_deletable:
 		article.delete()
 	return f"/view/{title}"
+
+@app.get("/search-go/", response_class = fastapi.responses.RedirectResponse)
+def search_go(request: fastapi.Request, search_text: str = ""):
+	if core.article.Article.find_article(search_text):
+		return fastapi.responses.RedirectResponse(f"/view/{search_text}", status_code = 303)
+	return fastapi.responses.RedirectResponse(f"/search/{search_text}", status_code = 303)
+
+@app.get("/search/{text}", response_class = fastapi.responses.HTMLResponse)
+def search(request: fastapi.Request, text: str):
+	return core.article.Article.search_files(text)
 
 @app.get("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
 def is_user_exist(request: fastapi.Request, username: str):
