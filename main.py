@@ -158,11 +158,23 @@ def delete(request: fastapi.Request, title: typing.Optional[str] = None):
 def search_go(request: fastapi.Request, search_text: str = ""):
 	if core.article.Article.find_article(search_text):
 		return fastapi.responses.RedirectResponse(f"/view/{search_text}", status_code = 303)
-	return fastapi.responses.RedirectResponse(f"/search/{search_text}", status_code = 303)
+	return fastapi.responses.RedirectResponse(f"/search/?query={search_text}", status_code = 303)
 
-@app.get("/search/{text}", response_class = fastapi.responses.HTMLResponse)
-def search(request: fastapi.Request, text: str):
-	return core.article.Article.search_files(text)
+@app.get("/search", response_class = fastapi.responses.HTMLResponse)
+@app.get("/search/", response_class = fastapi.responses.HTMLResponse)
+def search(request: fastapi.Request, query: str = ""):
+	result = core.article.Article.search_files(query)
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'settings': core.settings.instance,
+		'title' : f"Search for {query}",
+		'result': result,
+		'text': query,
+		'article_existence': core.article.Article.find_article(query),
+	}
+
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/search.html", context)
+	return response
 
 @app.get("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
 def is_user_exist(request: fastapi.Request, username: str):

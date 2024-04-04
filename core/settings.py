@@ -15,8 +15,8 @@ class Setting:
 
 	def __new__(cls, *args, **kwargs):
 		if not hasattr(cls, "_instance"):
-			cls._instance = super().__new__(cls)
-		return cls._instance
+			cls.instance = super().__new__(cls)
+		return cls.instance
 
 	def __init__(self):
 		settings_path = os.path.join(core.base_dir, "settings");

@@ -343,6 +343,21 @@ section {
 #content div.toc span.toctitle {
   font-size: 24px;
 }
+#content div.search_result {
+  color: rgb(0, 0, 0);
+  padding: 8px;
+  border-bottom: 1px solid rgb(63, 63, 63);
+}
+#content div.search_result:hover {
+  background-color: rgb(231, 239, 255);
+}
+#content div.search_result h2 {
+  border-bottom: none;
+}
+#content div.search_result span.search_result_hl {
+  background-color: rgb(63, 127, 255);
+  color: rgb(255, 255, 255);
+}
 
 #editor_button_box {
   width: 100%;

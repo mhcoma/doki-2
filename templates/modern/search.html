@@ -1,0 +1,27 @@
+{% extends "modern/layout.html" %}
+
+{% block content %}
+
+<div id = "content_title_box">
+	<span id = "content_title_text">{{ title }}</span>
+</div>
+
+<hr>
+
+
+<div id = "content">
+	{% if not article_existence %}
+		<em>The page '<a class = "ne_wikilink" href = "/view/{{ text }}">{{ text }}</a>' does not exist.</em>
+		<hr>
+	{% endif %}
+	{% for r in result %}
+		<a href = "/view/{{ r.title }}">
+			<div class = "search_result">
+				<h2>{% for t in r.title_results %}{% if t[0] %}<span class = "search_result_hl">{{ t[1] }}</span>{% else %}{{ t[1] }}{% endif %}{% endfor %}</h2>
+				<p>{% for c in r.content_results %}{% if c[0] %}<span class = "search_result_hl">{{ c[1] }}</span>{% else %}{{ c[1] }}{% endif %}{% endfor %}</p>
+			</div>
+		</a>
+	{% endfor %}
+</div>
+
+{% endblock content %}

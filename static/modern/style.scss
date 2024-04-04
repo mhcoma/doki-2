@@ -406,6 +406,25 @@ $hd_line: 1px solid $hr_color;
 			font-size: 24px;
 		}
 	}
+
+	div.search_result {
+		color: $bg_color_0;
+		padding: 8px;
+		border-bottom: $hd_line;
+
+		&:hover {
+			background-color: $base_color_1875;
+		}
+
+		h2 {
+			border-bottom: none;
+		}
+
+		span.search_result_hl {
+			background-color: $base_color_1;
+			color: $bg_color_2;
+		}
+	}
 }
 
 #editor_button_box {

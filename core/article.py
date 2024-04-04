@@ -6,13 +6,13 @@ import json
 import os
 import re
 import shutil
+import typing
 
 import markdown
 import markdown.extensions.fenced_code
 import markdown.extensions.codehilite
 import markdown.extensions.toc
 
-import lxml
 import lxml.html.clean
 
 import core
@@ -27,6 +27,34 @@ class ArticleLoadType(enum.Enum):
 	VIEW = 1
 	EDIT = 2
 	SEARCH = 3
+
+class SearchResult:
+	priority: int
+	title: str
+	title_results: list[tuple[bool, str]]
+	content_results: list[tuple[bool, str]]
+
+	def __init__(self, priority, title, title_results, content_results):
+		self.priority = priority
+		self.title = title
+		self.title_results = title_results
+		self.content_results = content_results
+	
+	def __lt__(self, other):
+		if self.__class__ is other.__class__:
+			return self.priority < other.priority
+	
+	def __le__(self, other):
+		if self.__class__ is other.__class__:
+			return self.priority <= other.priority
+	
+	def __gt__(self, other):
+		if self.__class__ is other.__class__:
+			return self.priority > other.priority
+	
+	def __ge__(self, other):
+		if self.__class__ is other.__class__:
+			return self.priority >= other.priority
 
 class Article:
 	article_directory_name = os.path.join(core.base_dir, "articles")
@@ -132,48 +160,93 @@ class Article:
 			else:
 				return user.is_admin
 			
-	def search_texts(self, text):
+	def search_texts(self, text) -> SearchResult | None:
 		pattern = re.compile(re.escape(text), re.I)
 		
 		is_found = False
 		
 		priority = 0
-		title_results = []
+		title_results: list[tuple[bool, str]] = []
 		title_search_pos = 0
 		title_matches = pattern.finditer(self.title)
+		title_len = len(self.title)
 		for r in title_matches:
-			is_found = True
 			r_span = r.span()
 			r_group = r.group()
-			title_results.append((False, self.title[title_search_pos:r_span[0]]))
+			if r_span[0] - title_search_pos > 0:
+				title_results.append((False, self.title[title_search_pos:r_span[0]]))
 			title_results.append((True, r_group))
 			title_search_pos = r_span[1]
-			priority += 1024
-		title_results.append((False, self.title[title_search_pos:]))
-		
-		data_results = []
-		data_search_pos = 0
-		
-		data_matches = pattern.finditer(self.plain_text_data)
-		for r in data_matches:
+			priority += 2
 			is_found = True
+		if len(self.title) - title_search_pos > 0:
+			title_results.append((False, self.title[title_search_pos:]))
+		
+		content_results: list[tuple[bool, str, tuple[int, int]]] = []
+		new_content_results: list[tuple[bool, str]] = []
+		content_search_pos = 0
+		content_matches = pattern.finditer(self.plain_text_data)
+		content_len = len(self.plain_text_data)
+		for r in content_matches:
 			r_span = r.span()
 			r_group = r.group()
-			data_results.append((False, self.plain_text_data[data_search_pos:r_span[0]]))
-			data_results.append((True, r_group))
-			data_search_pos = r_span[1]
+			if r_span[0] - content_search_pos > 0:
+				pos = (content_search_pos, r_span[0])
+				content_results.append((False, self.plain_text_data[content_search_pos:r_span[0]], pos))
+			pos = (r_span[0], r_span[1])
+			content_results.append((True, r_group, pos))
+			content_search_pos = r_span[1]
 			priority += 1
-		if is_found:
-			data_results.append((False, self.plain_text_data[data_search_pos:]))
+			is_found = True
 		
 		if is_found:
-			return (-priority, title_results, data_results)
+			if len(self.plain_text_data) - content_search_pos > 0:
+				pos = (content_search_pos, content_len)
+				content_results.append((False, self.plain_text_data[content_search_pos:], pos))
+			
+			if len(content_results) > 1:
+				results_token_len_sum = 0
+				is_break_next = False
+				stls_at_break = 0
+				for index, content_result in enumerate(content_results):
+					is_true, token, pos = content_result
+					token_len = pos[1] - pos[0]
+					if index == 0 and not is_true:
+						if token_len >= 25:
+							token = token[token_len - 25:token_len]
+							token_len = 25
+					results_token_len_sum += token_len
+					new_content_results.append((is_true, token))
+					print(results_token_len_sum)
+					if not is_break_next and results_token_len_sum > 256:
+						is_break_next = True
+						stls_at_break = results_token_len_sum
+						continue
+					if is_break_next:
+						break
+				print(new_content_results, stls_at_break)
+				if new_content_results[-1][0] and stls_at_break > 256:
+					new_content_results.pop()
+			else:
+				content_result = content_results[0]
+				is_true, token, pos = content_result
+				new_content_results.append((is_true, token))
+				stls_at_break = len(token)
+			
+			is_last_true, last_token = new_content_results[-1]
+			last_token_len = len(last_token)
+			if stls_at_break > 256:
+				last_token = last_token[:last_token_len + (256 - stls_at_break)] + " ..."
+			new_content_results[-1] = (is_last_true, last_token)
+		
+		if is_found:
+			return SearchResult(-priority, self.title, title_results, new_content_results)
 		return None
 	
 	@staticmethod
-	def search_files(text: str):
-		out_heap = []
-		out_list = []
+	def search_files(text: str) -> list[SearchResult]:
+		out_heap: list[SearchResult] = []
+		out_list: list[SearchResult] = []
 		for (root, dirs, files) in os.walk(Article.article_directory_name):
 			for article_name in dirs:
 				article = Article(article_name)
@@ -183,11 +256,10 @@ class Article:
 					heapq.heappush(out_heap, result)
 		is_found = False
 		while out_heap:
-			out_list.append(heapq.heappop(out_heap)[1:])
+			result = heapq.heappop(out_heap)
+			out_list.append(result)
 			is_found = True
-		if not is_found:
-			out_list = '검색 결과가 없습니다.'
-		return str(out_list)
+		return out_list
 	
 	@staticmethod
 	def convert_markdown(raw_data: str, convert_to_html: bool = True) -> str:
