@@ -334,6 +334,9 @@ section {
 #content table tbody tr:nth-of-type(even) {
   background-color: rgb(243, 247, 255);
 }
+#content img {
+  max-width: 100%;
+}
 #content div.toc {
   border: 1px solid rgb(207, 223, 255);
   width: -moz-fit-content;
@@ -381,7 +384,20 @@ section {
 .btn_editor:hover {
   background-color: rgb(207, 223, 255);
 }
-.btn_editor.btn_editor_focused {
+
+.btn_editor_tab {
+  margin-top: 4px;
+  margin-right: 4px;
+  background-color: rgb(239, 239, 239);
+  color: rgb(0, 0, 0);
+}
+.btn_editor_tab:nth-child(1) {
+  border-left: none;
+}
+.btn_editor_tab:hover {
+  background-color: rgb(191, 191, 191);
+}
+.btn_editor_tab.btn_editor_focused {
   background-color: rgb(223, 223, 223);
 }
 
@@ -428,6 +444,10 @@ section {
 .text_editor_section:focus {
   background-color: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
+}
+.text_editor_section:disabled {
+  background-color: rgb(191, 191, 191);
+  color: rgb(63, 63, 63);
 }
 
 .radio_editor_section {
@@ -481,6 +501,17 @@ section {
 .btn_editor_section:hover {
   background-color: rgb(31, 63, 127);
   color: rgb(255, 255, 255);
+}
+
+.btn_file {
+  margin-bottom: 8px;
+}
+.btn_file:hover {
+  cursor: pointer;
+}
+
+#editor_image_upload {
+  display: none;
 }
 
 #edit_area {

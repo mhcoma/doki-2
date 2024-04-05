@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -59,7 +58,7 @@
 							<input type = "search" name = "search_text" id = "header_search_bar">
 							<div id = "header_search_button_box">
 								<input type = "submit" value = "enter" style = "display: none;">
-								<button class = "btn btn_header" type = "button" onclick = "location.href = '/search/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
+								<button class = "btn btn_header" type = "button" onclick = "location.href = '/search/?query=' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_search.svg') }}"/></button>
 								<button class = "btn btn_header" type = "button" onclick = "location.href = '/view/' + header_search_bar.value"><img src = "{{ url_for('static', path = '/modern/symbol_go.svg') }}"/></button>
 							</div>
 						</div>

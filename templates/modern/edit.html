@@ -24,11 +24,12 @@
 		<button class = "btn btn_editor" type = "button" onclick = "editor_bold()">Bold</button>
 		<button class = "btn btn_editor" type = "button" onclick = "editor_inline_code()">Inline Code</button>
 		<button class = "btn btn_editor" type = "button" onclick = "editor_blockquote()">Blockquote</button>
-		<button class = "btn btn_editor" type = "button" onclick = "editor_extend_link(this)">Link</button>
-		<button class = "btn btn_editor" type = "button" onclick = "editor_extend_box('editor_special_chracters', this)">Special Characters</button>
-		<button class = "btn btn_editor" type = "button" onclick = "editor_extend_box('editor_list', this)">List</button>
-		<button class = "btn btn_editor" type = "button" onclick = "editor_extend_box('editor_table', this)">Table</button>
-		<button class = "btn btn_editor" type = "button" onclick = "editor_extend_box('editor_fenced_code', this)">Fenced Code</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_link(this)">Link</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_box('editor_special_chracters', this)">Special Characters</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_image(this)">Image</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_box('editor_list', this)">List</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_box('editor_table', this)">Table</button>
+		<button class = "btn btn_editor_tab" type = "button" onclick = "editor_extend_box('editor_fenced_code', this)">Fenced Code</button>
 		<div id = "editor_section_box">
 			<div class = "editor_section" id = "editor_link">
 				<label class = "lbl_editor_section">Target page or URL:
@@ -50,6 +51,35 @@
 			</div>
 			<div class = "editor_section" id = "editor_special_chracters">
 				Special Characters
+			</div>
+			<div class = "editor_section" id = "editor_image">
+				<div class = "editor_section_button_box">
+					<label class = "btn btn_editor_section btn_file">Upload base64 encoded image
+						<input type = "file" accept = "image/*" id = "editor_image_upload" value = "Upload">
+					</label>
+				</div>
+				<label class = "lbl_editor_section">Image data or URL:
+					<input class = "text_editor_section" type = "text" id = "editor_image_url">
+				</label>
+				<label class = "lbl_editor_section">Alt text:
+					<input class = "text_editor_section" type = "text" id = "editor_image_alt_text">
+				</label>
+
+				<label class = "lbl_editor_section">
+					<input class = "radio_editor_section" type = "radio" name = "editor_image_radio" value = "image_markdown" checked>Markdown image
+				</label>
+				<label class = "lbl_editor_section">
+					<input class = "radio_editor_section" type = "radio" name = "editor_image_radio" value = "image_html">HTML image
+				</label>
+				
+				<label class = "lbl_editor_section">Size:
+					<input class = "text_editor_section" type = "text" id = "editor_image_size" value = "auto" disabled>
+				</label>
+
+				<div class = "editor_section_button_box">
+					<button class = "btn btn_editor_section" type = "button" onclick = "editor_close_section()">Cancel</button>
+					<button class="btn btn_editor_section" type="button" onclick="editor_insert_image()">Insert image</button>
+				</div>
 			</div>
 			<div class = "editor_section" id = "editor_list">
 				List

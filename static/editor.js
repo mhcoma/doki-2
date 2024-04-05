@@ -20,6 +20,12 @@ let editor_link_target;
 let editor_link_display;
 let editor_link_radio;
 
+let editor_image_upload;
+let editor_image_url;
+let editor_image_alt_text;
+let editor_image_radio;
+let editor_image_size;
+
 let editor_table_rows;
 let editor_table_columns;
 let editor_table_radio;
@@ -34,6 +40,25 @@ $(window).on('load', function() {
 	editor_link_display = $('#editor_link_display')[0];
 
 	editor_link_radio = $('[name = "editor_link_radio"]');
+
+	editor_image_upload = $('#editor_image_upload');
+	editor_image_url = $('#editor_image_url');
+	editor_image_alt_text = $('#editor_image_alt_text');
+	editor_image_upload.on('change', function() {
+		// editor_image_file_name = editor_image_upload.val();
+		const file_reader = new FileReader();
+		file_reader.onload = function(event) {
+			editor_image_url.val(event.target.result);
+		}
+		file_reader.readAsDataURL(editor_image_upload[0].files[0]);
+		editor_image_upload.val('');
+	});
+	editor_image_radio = $('[name = "editor_image_radio"]');
+	editor_image_size = $('#editor_image_size');
+
+	editor_image_radio.on('change', function(event) {
+		editor_image_size.attr("disabled", editor_image_radio[0].checked);
+	});
 
 	editor_table_rows = $('#editor_table_rows');
 	editor_table_columns = $('#editor_table_columns');
@@ -247,6 +272,32 @@ function editor_insert_link() {
 	}
 	edit_area.focus();
 	document.execCommand('insertText', false, link_text);
+
+	editor_close_section();
+}
+
+function editor_extend_image(btn) {
+	editor_extend_box('editor_image', btn);
+	editor_image_url.val("");
+}
+
+function editor_insert_image() {
+	let alt_text = editor_image_alt_text.val();
+	if (alt_text == '') alt_text = 'Image';
+	let url_text = editor_image_url.val();
+	let width_text = editor_image_size.val();
+
+	let img_text;
+
+	if (editor_image_radio[0].checked) {
+		img_text = `![${alt_text}](${url_text})`;
+	}
+	else {
+		img_text = `<img src="${url_text}" alt="${alt_text}" style="width: ${width_text};">`;
+	}
+	
+	edit_area.focus();
+	document.execCommand('insertText', false, img_text);
 
 	editor_close_section();
 }

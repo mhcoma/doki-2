@@ -38,7 +38,17 @@ $bg_color_1875: bg_color(1.875);
 $bg_color_19375: bg_color(1.9375);
 $bg_color_2: bg_color(2.0);
 
+$neg_color_0: neg_color(0.0);
+$neg_color_025: neg_color(0.25);
+$neg_color_05: neg_color(0.5);
+$neg_color_075: neg_color(0.75);
 $neg_color_1: neg_color(1.0);
+$neg_color_125: neg_color(1.25);
+$neg_color_15: neg_color(1.5);
+$neg_color_175: neg_color(1.75);
+$neg_color_1875: neg_color(1.875);
+$neg_color_19375: neg_color(1.9375);
+$neg_color_2: neg_color(2.0);
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap');
@@ -398,6 +408,10 @@ $hd_line: 1px solid $hr_color;
 		}
 	}
 
+	img {
+		max-width: 100%;
+	}
+
 	div.toc {
 		border: 1px solid $base_color_175;
 		width: fit-content;
@@ -451,6 +465,21 @@ $hd_line: 1px solid $hr_color;
 	&:hover {
 		background-color: $base_color_175;
 	}
+}
+
+.btn_editor_tab {
+	margin-top: 4px;
+	margin-right: 4px;
+	background-color: $bg_color_1875;
+	color: $bg_color_0;
+
+	&:nth-child(1) {
+		border-left: none;
+	}
+
+	&:hover {
+		background-color: $bg_color_15;
+	}
 
 	&.btn_editor_focused {
 		background-color: $bg_color_175;
@@ -502,6 +531,11 @@ $hd_line: 1px solid $hr_color;
 	&:focus {
 		background-color: $bg_color_2;
 		color: $bg_color_0;
+	}
+
+	&:disabled {
+		background-color: $bg_color_15;
+		color: $bg_color_05;
 	}
 }
 .radio_editor_section {
@@ -560,6 +594,17 @@ $hd_line: 1px solid $hr_color;
 		background-color: $base_color_05;
 		color: $bg_color_2;
 	}
+}
+
+.btn_file {
+	margin-bottom: 8px;
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+#editor_image_upload {
+	display: none;
 }
 
 #edit_area {

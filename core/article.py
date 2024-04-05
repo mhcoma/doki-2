@@ -277,6 +277,7 @@ class Article:
 
 	@staticmethod
 	def convert_html_to_plain_text(html: str) -> str:
+		if html.isspace(): return ""
 		return re.sub('(&nbsp;| |\t|\r|\n)+', ' ', str(Article.cleaner.clean_html(html))[5:-6])
 
 md = markdown.Markdown(
