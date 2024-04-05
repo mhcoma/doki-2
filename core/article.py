@@ -129,6 +129,8 @@ class Article:
 			}
 		)
 
+		raw_data_for_check_redirect = self.raw_data.strip()
+
 		md_filename = os.path.join(
 			self.directory_name,
 			f"{self.article_data['edition']}.md"
@@ -238,9 +240,9 @@ class Article:
 			if stls_at_break > 256:
 				last_token = last_token[:last_token_len + (256 - stls_at_break)] + " ..."
 			new_content_results[-1] = (is_last_true, last_token)
-		
-		if is_found:
+
 			return SearchResult(-priority, self.title, title_results, new_content_results)
+		
 		return None
 	
 	@staticmethod
