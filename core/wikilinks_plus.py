@@ -15,9 +15,9 @@ import re
 
 import typing
 
-def build_url(text: str, base: str, end: str) -> tuple[str, str, str]:
+def build_url(self, text: str, base: str, end: str) -> tuple[str, str, str]:
 	splitted_text = text.split('|')
-	title = splitted_text[0]
+	title =  self.unescape(splitted_text[0]).strip()
 	label = title
 	if len(splitted_text) != 1:
 		label = splitted_text[1]
@@ -54,8 +54,9 @@ class WikiLinksPlusInlineProcessor(InlineProcessor):
 	def handleMatch(self, m: re.Match[str], data: str) -> tuple[etree.Element | str, int, int]:
 		if m.group(1).strip():
 			base_url, end_url, exist_class, not_exist_class = self._getMeta()
-			text = self.unescape(m.group(1)).strip()
-			result = self.config['build_url'](text, base_url, end_url)
+			# text = self.unescape(m.group(1)).strip()
+			text = m.group(1)
+			result = self.config['build_url'](self, text, base_url, end_url)
 			url = result[0]
 			a = etree.Element('a')
 			a.text = result[1]
