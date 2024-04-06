@@ -1,6 +1,14 @@
+let username_textbox;
+let password_textbox;
+let hash_a;
+let hash_b;
+
 $(window).on('load', function() {
-	let username_textbox = $('#login_username');
-	let password_textbox = $('#login_password');
+	username_textbox = $('#login_username');
+	password_textbox = $('#login_password');
+	
+	hash_a = $('#hash_a');
+	hash_b = $('#hash_b');
 
 	username_textbox[0].setCustomValidity('Username is required.');
 	password_textbox[0].setCustomValidity('Password is required.');
@@ -45,6 +53,13 @@ $(window).on('load', function() {
 		'load change input',
 		function(event) {
 			let val = password_textbox.val();
+			let reversed_val = val.split('').reverse().join('');
+			let hash_a_val = SHA256.createHash("sha256").update(val).digest("hex");
+			let hash_b_val = SHA256.createHash("sha256").update(reversed_val).digest("hex");
+
+			hash_a.val(hash_a_val);
+			hash_b.val(hash_b_val);
+			
 			let result = true;
 			if (val === '') {
 				password_textbox[0].setCustomValidity('Password is required.');
@@ -52,10 +67,10 @@ $(window).on('load', function() {
 			}
 			else {
 				let can_login = false;
-				let username = username_textbox.val()
+				let username_val = username_textbox.val()
 				$.ajax(
 					{
-						url: `/can_login/?username=${username}&password=${val}`,
+						url: `/can_login/?username=${username_val}&hash_a=${hash_a_val}&hash_b=${hash_b_val}`,
 						dataType: 'json',
 						async: false,
 						success: function(user_data) {

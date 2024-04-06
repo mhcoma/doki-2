@@ -1,8 +1,6 @@
 import json
 import typing
 
-import os
-
 import fastapi
 import fastapi.responses
 import fastapi.staticfiles
@@ -184,10 +182,10 @@ def is_user_exist(request: fastapi.Request, username: str):
 	return json.dumps(result)
 
 @app.get("/can_login/", response_class = fastapi.responses.HTMLResponse)
-def can_login(request: fastapi.Request, username: str, password: str):
+def can_login(request: fastapi.Request, username: str, hash_a: str, hash_b: str):
 	user = core.user.User(username)
 	result = dict()
-	result['can_login'] = user.can_login(password)
+	result['can_login'] = user.can_login(hash_a, hash_b)
 	return json.dumps(result)
 
 @app.get("/login/", response_class = fastapi.responses.HTMLResponse)
@@ -216,10 +214,12 @@ def login_submit(
 	response: fastapi.Response,
 	request: fastapi.Request,
 	username: str = fastapi.Form(),
-	password: str = fastapi.Form()
+	password: str = fastapi.Form(),
+	hash_a: str = fastapi.Form(),
+	hash_b: str = fastapi.Form(),
 ):
 	user = core.user.User(username)
-	result = user.login(password, request)
+	result = user.login(hash_a, hash_b, request)
 
 	redirect_url = request.session['referer'] if result else "/login/"
 
@@ -268,9 +268,11 @@ def join_submit(
 	username: str = fastapi.Form(),
 	password: str = fastapi.Form(),
 	confirm_password: str = fastapi.Form(),
+	hash_a: str = fastapi.Form(),
+	hash_b: str = fastapi.Form(),
 	email: str = fastapi.Form()
 ):
-	user = core.user.User(username, password, email)
+	user = core.user.User(username, hash_a, hash_b, email)
 	join_result = user.join()
 
 	if join_result:

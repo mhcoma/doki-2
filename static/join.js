@@ -1,8 +1,18 @@
+let username_textbox;
+let password_textbox;
+let confirm_password_textbox;
+let email_textbox;
+let hash_a;
+let hash_b;
+
 $(window).on('load', function() {
-	let username_textbox = $('#join_username');
-	let password_textbox = $('#join_password');
-	let confirm_password_textbox = $('#join_confirm_password');
-	let email_textbox = $('#join_email');
+	username_textbox = $('#join_username');
+	password_textbox = $('#join_password');
+	confirm_password_textbox = $('#join_confirm_password');
+	email_textbox = $('#join_email');
+	
+	hash_a = $('#hash_a');
+	hash_b = $('#hash_b');
 
 	username_textbox[0].setCustomValidity('Username is required.');
 	password_textbox[0].setCustomValidity('Password is required.');
@@ -49,11 +59,18 @@ $(window).on('load', function() {
 		'load change input',
 		function(event) {
 			let val = password_textbox.val();
+			let reversed_val = val.split('').reverse().join('');
 			if (val === '') {
 				password_textbox[0].setCustomValidity('Password is required.');
 			}
 			else {
 				password_textbox[0].setCustomValidity('');
+
+				let hash_a_txt = SHA256.createHash("sha256").update(val).digest("hex");
+				let hash_b_txt = SHA256.createHash("sha256").update(reversed_val).digest("hex");
+				
+				hash_a.val(hash_a_txt);
+				hash_b.val(hash_b_txt);
 			}
 		}
 	);

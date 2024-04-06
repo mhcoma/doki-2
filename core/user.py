@@ -28,25 +28,25 @@ class User:
 	is_admin: bool
 	group: list[str]
 
-	def __init__(self, username: str, password: str | None = None, email: str | None = None):
+	def __init__(self, username: str, hash_a: str | None = None, hash_b: str | None = None, email: str | None = None):
 		self.username = username
 		self.user_filename = os.path.join(users_directory, f"{self.username}.json")
 		self.existence = os.path.isfile(self.user_filename)
 
 		self.email: str = email if email != None else ""
+		self.hash_a: str = hash_a if hash_a != None else ""
+		self.hash_b: str = hash_b if hash_b != None else ""
 		self.is_admin: bool = False
-
-		if password:
-			self.hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
-			self.hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
 
 		if self.existence:
 			user_file = open(self.user_filename, 'r', encoding = "utf-8")
 			user_data: UserData = json.load(user_file)
 			user_file.close()
 			
-			if not password:
+			if not hash_a:
 				self.hash_a = user_data['hash_a']
+
+			if not hash_b:
 				self.hash_b = user_data['hash_b']
 			
 			if not email:
@@ -79,27 +79,41 @@ class User:
 
 		return True
 	
-	def login(self, password: str, request: fastapi.Request) -> bool:
-		if not self.can_login(password):
+	def login(self, hash_a: str, hash_b: str, request: fastapi.Request) -> bool:
+		if not self.can_login(hash_a, hash_b):
 			return False
-
+		
 		session = request.session
 		session["username"] = self.username
 		session["is_admin"] = self.is_admin
 
 		return True
+	
+	def can_login(self, hash_a: str, hash_b: str) -> bool:
+		if not self.existence: return False
+		return (hash_a == self.hash_a) and (hash_b == self.hash_b)
 
 	def is_user_exist(self) -> bool:
 		return self.existence
 	
-	def can_login(self, password: str) -> bool:
-		if not self.existence: return False
-		hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
-		hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
-		return (hash_a == self.hash_a) and (hash_b == self.hash_b)
-	
 	def is_not_noob(self) -> bool:
 		return self.join_date + datetime.timedelta(days = 15) <= datetime.datetime.now()
+
+	# def login_old(self, password: str, request: fastapi.Request) -> bool:
+	# 	if not self.can_login_old(password):
+	# 		return False
+
+	# 	session = request.session
+	# 	session["username"] = self.username
+	# 	session["is_admin"] = self.is_admin
+
+	# 	return True
+ 
+	# def can_login_old(self, password: str) -> bool:
+	# 	if not self.existence: return False
+	# 	hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
+	# 	hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
+	# 	return (hash_a == self.hash_a) and (hash_b == self.hash_b)
 
 def get_user_from_request(request: fastapi.Request) -> tuple[User | None, str]:
 	if 'username' in request.session:
