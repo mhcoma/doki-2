@@ -99,22 +99,6 @@ class User:
 	def is_not_noob(self) -> bool:
 		return self.join_date + datetime.timedelta(days = 15) <= datetime.datetime.now()
 
-	# def login_old(self, password: str, request: fastapi.Request) -> bool:
-	# 	if not self.can_login_old(password):
-	# 		return False
-
-	# 	session = request.session
-	# 	session["username"] = self.username
-	# 	session["is_admin"] = self.is_admin
-
-	# 	return True
- 
-	# def can_login_old(self, password: str) -> bool:
-	# 	if not self.existence: return False
-	# 	hash_a = hashlib.sha256(password.encode('utf-8')).hexdigest()
-	# 	hash_b = hashlib.sha256(password[::-1].encode('utf-8')).hexdigest()
-	# 	return (hash_a == self.hash_a) and (hash_b == self.hash_b)
-
 def get_user_from_request(request: fastapi.Request) -> tuple[User | None, str]:
 	if 'username' in request.session:
 		username = request.session['username']

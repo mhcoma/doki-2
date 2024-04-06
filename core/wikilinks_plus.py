@@ -46,7 +46,6 @@ class WikiLinkPlusExtension(Extension):
 		wikilinkPattern.md = md
 		md.inlinePatterns.register(wikilinkPattern, 'wikilink', 75)
 
-
 class WikiLinksPlusInlineProcessor(InlineProcessor):
 	def __init__(self, pattern: str, config: dict[str, typing.Any]):
 		super().__init__(pattern)
