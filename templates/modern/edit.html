@@ -125,7 +125,13 @@
 		</div>
 	</div>
 	
-	<textarea name = "raw_data" id = "edit_area" onkeydown = "editor_keydown(event)" onkeyup = "editor_keyup(event)" autofocus>{{ article.raw_data|safe }}</textarea>
+	<textarea
+		name = "raw_data" id = "edit_area"
+		onkeydown = "editor_keydown(event)" onkeyup = "editor_keyup(event)"
+		autocomplete = "off" autocorrect = "off" autocapitalize = "off" spellcheck = "false"
+		ng-model-options = "{ updateOn: 'blur' }"
+		autofocus
+	>{{ article.raw_data|safe }}</textarea>
 </form>
 
 {% endblock content %}

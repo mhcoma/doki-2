@@ -1,5 +1,7 @@
 import json
 import typing
+import base64
+import io
 
 import fastapi
 import fastapi.responses
@@ -7,13 +9,14 @@ import fastapi.staticfiles
 import fastapi.templating
 import starlette.middleware.sessions
 
+import PIL.Image
+
 import core
 import core.article
 import core.user
 import core.utils
 import core.settings
 import core.editor_data
-
 
 app = fastapi.FastAPI()
 templates = fastapi.templating.Jinja2Templates(directory = "templates", autoescape = False)
@@ -279,6 +282,40 @@ def join_submit(
 		return "/login/"
 
 	return "/join/"
+
+@app.post("/compress-image/", response_class = fastapi.responses.HTMLResponse)
+def compress_image(request: fastapi.Request, image_file: fastapi.UploadFile = fastapi.Form()):
+
+	format: str
+	animated: bool = False
+	match image_file.content_type:
+		case "image/apng" | "image/gif" | "image/png" | "image/webp":
+			format = "webp"
+		case "image/jpeg":
+			format = "jpeg"
+		case "image/svg+xml":
+			format = "svg+xml"
+		case _:
+			return ""
+
+	if format == "svg+xml":
+		image_data = image_file.file.read()
+	else:
+		image = PIL.Image.open(image_file.file)
+
+		buffer = io.BytesIO()
+		ext = image.format
+
+		if "duration" in image.info:
+			image.save(buffer, format = format, save_all = True, duration = image.info['duration'])
+		else:
+			image.save(buffer, format = format)
+		image_data = buffer.getvalue()
+	image_str = f"data:image/{format};base64," + base64.b64encode(image_data).decode("utf-8")
+
+	result = dict()
+	result['compressed_image'] = image_str
+	return json.dumps(result)
 
 @app.get("/", response_class = fastapi.responses.RedirectResponse, status_code = 308)
 def root(request: fastapi.Request):

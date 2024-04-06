@@ -46,11 +46,31 @@ $(window).on('load', function() {
 	editor_image_alt_text = $('#editor_image_alt_text');
 	editor_image_upload.on('change', function() {
 		// editor_image_file_name = editor_image_upload.val();
-		const file_reader = new FileReader();
-		file_reader.onload = function(event) {
-			editor_image_url.val(event.target.result);
-		}
-		file_reader.readAsDataURL(editor_image_upload[0].files[0]);
+		// const file_reader = new FileReader();
+		// file_reader.onload = function(event) {
+		// 	editor_image_url.val(event.target.result);
+		// }
+		// file_reader.readAsDataURL(editor_image_upload[0].files[0]);
+
+		let form = new FormData();
+		form.append("image_file", editor_image_upload[0].files[0]);
+		$.ajax(
+			{
+				url: `/compress-image/`,
+				type: 'post',
+				data: form,
+				dataType: 'json',
+				async: false,
+				processData : false,
+				contentType : false,
+				success: function(data) {
+					let compressed_image = data.compressed_image
+					console.log(compressed_image)
+					editor_image_url.val(compressed_image);
+				}
+			}
+		);
+
 		editor_image_upload.val('');
 	});
 	editor_image_radio = $('[name = "editor_image_radio"]');
