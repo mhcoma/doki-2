@@ -27,6 +27,7 @@ class ArticleLoadType(enum.Enum):
 	VIEW = 1
 	EDIT = 2
 	SEARCH = 3
+	FIND = 4
 
 class SearchResult:
 	priority: int
@@ -104,8 +105,14 @@ class Article:
 				plain_text_data_file = open(self.plain_text_data_filename, 'r', encoding = "utf-8")
 				self.plain_text_data = plain_text_data_file.read()
 				plain_text_data_file.close()
+			elif load_type == ArticleLoadType.FIND:
+				self.existence = os.path.isdir(self.directory_name)
 
-	def render_markdown(self):
+	def render_markdown(self, codehilite:str):
+		for extension in self.md.registeredExtensions:
+			if type(extension) == markdown.extensions.codehilite.CodeHiliteExtension:
+				extension.setConfig('pygments_style', codehilite)
+				break
 		self.data = Article.convert_markdown(self.raw_data)
 	
 	def save(self, username: str):
@@ -266,13 +273,14 @@ class Article:
 	@staticmethod
 	def convert_markdown(raw_data: str, convert_to_html: bool = True) -> str:
 		result = Article.md.convert(raw_data)
+		Article.md.reset()
 		if not convert_to_html: result = Article.convert_html_to_plain_text(result)
 		return result
 	
 	@staticmethod
 	def find_article(title):
 		article = Article(title)
-		article.load()
+		article.load(load_type = ArticleLoadType.FIND)
 		return article.existence
 
 	@staticmethod
@@ -290,14 +298,13 @@ md = markdown.Markdown(
 		),
 		markdown.extensions.fenced_code.FencedCodeExtension(),
 		markdown.extensions.codehilite.CodeHiliteExtension(
-			noclasses = True,
-			pygments_style = core.settings.instance.codehilite
+			noclasses = False,
 		),
 		markdown.extensions.toc.TocExtension(
 			title = "Table of Contents",
 			slugify = core.toc_plus.do_nothing
 		),
-		"legacy_em", "sane_lists", "tables"
+		"legacy_em", "sane_lists", "tables", "footnotes"
 	]
 )
 

@@ -33,11 +33,13 @@ app.add_middleware(
 def view(request: fastapi.Request, title: typing.Optional[str] = None):
 	if title == None:
 		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
+	user, username = core.user.get_user_from_request(request)
+	
 	article = core.article.Article(title)
 	article.load()
-	article.render_markdown()
-
-	user, username = core.user.get_user_from_request(request)
+	codehilite = core.user.get_codehilite(user)
+	article.render_markdown(codehilite)
 
 	is_editable = article.is_accessable('edit', user)
 	is_deletable = article.is_accessable('delete', user)
@@ -51,7 +53,8 @@ def view(request: fastapi.Request, title: typing.Optional[str] = None):
 		'user': user,
 		'is_editable': is_editable,
 		'is_deletable': is_deletable,
-		'is_movable': is_movable
+		'is_movable': is_movable,
+		'codehilite': codehilite
 	}
 	
 	response = templates.TemplateResponse(f"{core.settings.instance.skin}/view.html", context)
@@ -285,9 +288,7 @@ def join_submit(
 
 @app.post("/compress-image/", response_class = fastapi.responses.HTMLResponse)
 def compress_image(request: fastapi.Request, image_file: fastapi.UploadFile = fastapi.Form()):
-
 	format: str
-	animated: bool = False
 	match image_file.content_type:
 		case "image/apng" | "image/gif" | "image/png" | "image/webp":
 			format = "webp"

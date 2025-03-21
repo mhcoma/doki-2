@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 import json
 import os
@@ -7,6 +9,7 @@ import typing
 import fastapi
 
 import core
+import core.settings
 import core.utils
 
 users_directory = os.path.join(core.base_dir, "users")
@@ -18,6 +21,7 @@ class UserData(typing.TypedDict):
 	email: str
 	is_admin: bool
 	join_date: str
+	codehilite: str
 	group: list[str]
 
 class User:
@@ -26,6 +30,7 @@ class User:
 	hash_b: str
 	email: str
 	is_admin: bool
+	codehilite: str
 	group: list[str]
 
 	def __init__(self, username: str, hash_a: str | None = None, hash_b: str | None = None, email: str | None = None):
@@ -55,6 +60,8 @@ class User:
 			self.is_admin = user_data['is_admin']
 
 			self.join_date = datetime.datetime.fromisoformat(user_data['join_date'])
+
+			self.codehilite = user_data['codehilite']
 			
 			self.group = user_data['group']
 
@@ -69,6 +76,7 @@ class User:
 			'email': self.email,
 			'is_admin': False,
 			'join_date': datetime.datetime.now(datetime.UTC).isoformat(),
+			'codehilite': "None",
 			'group': []
 		}
 
@@ -98,6 +106,14 @@ class User:
 	
 	def is_not_noob(self) -> bool:
 		return self.join_date + datetime.timedelta(days = 15) <= datetime.datetime.now()
+
+def get_codehilite(user: User | None):
+	if user == None:
+		return core.settings.instance.codehilite
+	elif user.codehilite == "None":
+		return core.settings.instance.codehilite
+	else:
+		return user.codehilite
 
 def get_user_from_request(request: fastapi.Request) -> tuple[User | None, str]:
 	if 'username' in request.session:

@@ -347,9 +347,22 @@ $hd_line: 1px solid $hr_color;
 		color: $base_color_1;
 		transition: all 0.1s;
 
+		img {
+			display: inline;
+			outline: 0px solid $base_color_1;
+			outline-offset: 0px;
+
+			transition: all 0.1s;
+		}
+
 		&:hover {
 			background-color: $base_color_1;
 			color: $bg_color_2;
+
+			img {
+				outline: 16px solid $base_color_1;
+				outline-offset: -16px;
+			}
 		}
 
 		&.ne_wikilink {
@@ -358,6 +371,11 @@ $hd_line: 1px solid $hr_color;
 			&:hover {
 				background-color: $neg_color_1;
 				color: $bg_color_2;
+
+				img {
+					outline: 16px solid $neg_color_1;
+					outline-offset: -16px;
+				}
 			}
 		}
 	}
@@ -410,6 +428,7 @@ $hd_line: 1px solid $hr_color;
 
 	img {
 		max-width: 100%;
+		vertical-align: bottom;
 	}
 
 	div.toc {

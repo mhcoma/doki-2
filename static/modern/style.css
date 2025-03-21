@@ -283,9 +283,19 @@ section {
   color: rgb(63, 127, 255);
   transition: all 0.1s;
 }
+#content a img {
+  display: inline;
+  outline: 0px solid rgb(63, 127, 255);
+  outline-offset: 0px;
+  transition: all 0.1s;
+}
 #content a:hover {
   background-color: rgb(63, 127, 255);
   color: rgb(255, 255, 255);
+}
+#content a:hover img {
+  outline: 16px solid rgb(63, 127, 255);
+  outline-offset: -16px;
 }
 #content a.ne_wikilink {
   color: rgb(255, 63, 127);
@@ -293,6 +303,10 @@ section {
 #content a.ne_wikilink:hover {
   background-color: rgb(255, 63, 127);
   color: rgb(255, 255, 255);
+}
+#content a.ne_wikilink:hover img {
+  outline: 16px solid rgb(255, 63, 127);
+  outline-offset: -16px;
 }
 #content blockquote {
   border: 1px solid rgb(111, 159, 255);
@@ -336,6 +350,7 @@ section {
 }
 #content img {
   max-width: 100%;
+  vertical-align: bottom;
 }
 #content div.toc {
   border: 1px solid rgb(207, 223, 255);
