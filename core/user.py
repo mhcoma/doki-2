@@ -107,7 +107,7 @@ class User:
 	def is_not_noob(self) -> bool:
 		return self.join_date + datetime.timedelta(days = 15) <= datetime.datetime.now()
 
-def get_codehilite(user: User | None):
+def get_codehilite(user: User | None) -> str:
 	if user == None:
 		return core.settings.instance.codehilite
 	elif user.codehilite == "None":

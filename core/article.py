@@ -278,7 +278,7 @@ class Article:
 		return result
 	
 	@staticmethod
-	def find_article(title):
+	def find_article(title) -> bool:
 		article = Article(title)
 		article.load(load_type = ArticleLoadType.FIND)
 		return article.existence
