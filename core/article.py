@@ -28,6 +28,7 @@ class ArticleLoadType(enum.Enum):
 	EDIT = 2
 	SEARCH = 3
 	FIND = 4
+	DELETE = 5
 
 class SearchResult:
 	priority: int
@@ -77,6 +78,7 @@ class Article:
 
 		self.acl_filename = os.path.join(self.directory_name, "acl.json")
 		self.acl_data = core.settings.instance.default_acl.copy()
+		self.raw_acl_data = json.dumps(self.acl_data, indent = '\t')
 
 		self.plain_text_data_filename = os.path.join(self.directory_name, "plain.txt")
 		self.plain_text_data = ""
@@ -87,6 +89,7 @@ class Article:
 				self.article_data = core.utils.load_json_file(self.article_filename)
 				self.history_data = core.utils.load_json_file(self.history_filename)
 				self.acl_data = core.utils.load_json_file(self.acl_filename)
+				self.raw_acl_data = json.dumps(self.acl_data, indent = '\t')
 
 				edition = self.article_data['edition']
 				for i in range(edition, -1, -1):
@@ -101,6 +104,8 @@ class Article:
 				self.article_data['edition'] = edition
 
 				core.utils.save_json_file(self.article_data, self.article_filename)
+			elif load_type == ArticleLoadType.DELETE:
+				self.acl_data = core.utils.load_json_file(self.acl_filename)
 			elif load_type == ArticleLoadType.SEARCH:
 				plain_text_data_file = open(self.plain_text_data_filename, 'r', encoding = "utf-8")
 				self.plain_text_data = plain_text_data_file.read()
@@ -152,6 +157,8 @@ class Article:
 
 		core.utils.save_json_file(self.article_data, self.article_filename)
 		core.utils.save_json_file(self.history_data, self.history_filename)
+
+		self.acl_data = json.loads(self.raw_acl_data)
 		core.utils.save_json_file(self.acl_data, self.acl_filename)
 
 	def delete(self):
@@ -159,12 +166,14 @@ class Article:
 			shutil.rmtree(self.directory_name)
 	
 	def is_accessable(self, key: str, user: core.user.User | None) -> bool:
+		acl = core.utils.AccessLevel[self.acl_data[key]]
+		print(key, acl)
 		if user == None:
-			return self.acl_data[key] <= core.utils.AccessLevel.ANONYMOUS
+			return acl <= core.utils.AccessLevel.ANONYMOUS
 		else:
-			if self.acl_data[key] <= core.utils.AccessLevel.NOOB:
+			if acl <= core.utils.AccessLevel.NOOB:
 				return True
-			elif self.acl_data[key] <= core.utils.AccessLevel.USER:
+			elif acl <= core.utils.AccessLevel.USER:
 				return user.is_not_noob()
 			else:
 				return user.is_admin

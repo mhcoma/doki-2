@@ -11,7 +11,7 @@ class Setting:
 	skin: str
 	codehilite: str
 	secret_key: str
-	default_acl: dict[str, core.utils.AccessLevel]
+	default_acl: dict[str, str]
 
 	def __new__(cls, *args, **kwargs):
 		if not hasattr(cls, "_instance"):
@@ -25,11 +25,12 @@ class Setting:
 			settings_data = core.utils.load_json_file(settings_filename)
 			default_acl = settings_data['default_acl']
 			for key, val in default_acl.items():
-				default_acl[key] = core.utils.AccessLevel(val)
+				default_acl[key] = str(core.utils.AccessLevel(val))
 		else:
 			secret_key = secrets.token_hex()
 			
 			default_acl = {
+				"view": str(core.utils.AccessLevel.ANONYMOUS),
 				"edit": str(core.utils.AccessLevel.NOOB),
 				"move": str(core.utils.AccessLevel.NOOB),
 				"discuss": str(core.utils.AccessLevel.NOOB),

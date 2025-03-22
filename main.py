@@ -41,9 +41,11 @@ def view(request: fastapi.Request, title: typing.Optional[str] = None):
 	codehilite = core.user.get_codehilite(user)
 	article.render_markdown(codehilite)
 
+	is_viewable = article.is_accessable('view', user)
 	is_editable = article.is_accessable('edit', user)
 	is_deletable = article.is_accessable('delete', user)
 	is_movable = article.is_accessable('move', user)
+	can_change_acl = article.is_accessable('acl', user)
 
 	context: dict[str, typing.Any] = {
 		'request': request,
@@ -51,9 +53,11 @@ def view(request: fastapi.Request, title: typing.Optional[str] = None):
 		'article': article,
 		'settings': core.settings.instance,
 		'user': user,
+		'is_viewable': is_viewable,
 		'is_editable': is_editable,
 		'is_deletable': is_deletable,
 		'is_movable': is_movable,
+		'can_change_acl': can_change_acl,
 		'codehilite': codehilite
 	}
 	
@@ -142,6 +146,61 @@ def edit_save(
 	
 	return f"/view/{title}"
 
+@app.get("/acl", response_class = fastapi.responses.RedirectResponse)
+@app.get("/acl/", response_class = fastapi.responses.RedirectResponse)
+@app.get("/acl/{title}", response_class = fastapi.responses.HTMLResponse)
+def acl(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	article = core.article.Article(title)
+	article.load()
+
+	user, username = core.user.get_user_from_request(request)
+
+	can_change_acl = article.is_accessable('acl', user)
+	if not can_change_acl:
+		return fastapi.responses.RedirectResponse(f"/view/{title}")
+	
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': f"Change ACL of {title}",
+		'article': article,
+		'settings': core.settings.instance,
+		'user': user
+	}
+	
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/acl.html", context)
+
+	return response
+
+@app.get("/acl-save", response_class = fastapi.responses.RedirectResponse)
+@app.get("/acl-save/", response_class = fastapi.responses.RedirectResponse)
+@app.post("/acl-save/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
+def acl_save(
+	request: fastapi.Request,
+	title: typing.Optional[str] = None,
+	raw_acl_data: str = fastapi.Form(None)
+):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
+	user, username = core.user.get_user_from_request(request)
+
+	article = core.article.Article(title)
+	article.load()
+
+	can_change_acl = article.is_accessable('acl', user)
+
+	if can_change_acl:
+		if raw_acl_data is None:
+			raw_acl_data = core.settings.instance.default_acl.copy()
+		raw_acl_data = raw_acl_data.replace('\r', '').strip()
+		if not article.existence or raw_acl_data != article.raw_acl_data:
+			article.raw_acl_data = raw_acl_data
+			article.save(username)
+	
+	return f"/view/{title}"
+
 @app.get("/delete", response_class = fastapi.responses.RedirectResponse)
 @app.get("/delete/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/delete/{title}", response_class = fastapi.responses.RedirectResponse, status_code = 303)
@@ -152,6 +211,7 @@ def delete(request: fastapi.Request, title: typing.Optional[str] = None):
 	user, username = core.user.get_user_from_request(request)
 
 	article = core.article.Article(title)
+	article.load(load_type = core.article.ArticleLoadType.DELETE)
 	is_deletable = article.is_accessable('delete', user)
 
 	if is_deletable:

@@ -6,7 +6,10 @@
 		</title>
 		<meta charset = "utf-8">
 		<link rel = "stylesheet" href = "{{ url_for('static', path = '/%s/style.css?v=1.0' % settings.skin)}}">
-		<link rel = "stylesheet" href = "{{ url_for('static', path = '/codehilite/%s.css?v=1.0' % codehilite)}}">
+		
+		{% if codehilite %}
+			<link rel = "stylesheet" href = "{{ url_for('static', path = '/codehilite/%s.css?v=1.0' % codehilite)}}">
+		{% endif %}
 
 		<script>
 			MathJax = {
