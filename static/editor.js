@@ -33,6 +33,7 @@ let editor_table_radio;
 let editor_fenced_code_language;
 
 let keydown_shift = false;
+let keydown_ctrl = false;
 
 $(window).on('load', function() {
 	editor_section_box = $('#editor_section_box')[0];
@@ -234,19 +235,49 @@ function editor_remove_tab() {
 	let block_text_lines = select_data.bt.split('\n\t');
 	select_data.bt = block_text_lines.join('\n');
 	let tab_count = block_text_lines.length;
-	if (select_data.bs != select_data.ss)
+	if (select_data.bs != select_data.ss) {
 		if (edit_area.value.charAt(select_data.ss) != '\t') {
 			if (select_data.bt.charAt(0) == '\t')
 				select_data.ss--;
 		}
-	else if (select_data.be == select_data.se);
+	}
+	else if (select_data.be == select_data.se) {
 		tab_count--;
+	}
 	console.log(edit_area.value.charCodeAt(select_data.ss));
 	if (select_data.bt.charAt(0) == '\t') {
 		select_data.bt = select_data.bt.substring(1);
 		tab_count++;
 	}
 	select_data.se -= tab_count;
+	editor_set_select_block(select_data);
+}
+
+function editor_insert_line_after() {
+	let select_data = editor_get_select_block();
+	let tab_count = 0;
+	for (let i = 0; i < select_data.bt.length; i++) {
+		if (select_data.bt.charAt(i) != '\t') break;
+		tab_count += 1;
+	}
+	select_data.bt = select_data.bt + '\n' + '\t'.repeat(tab_count);
+	
+	select_data.ss = select_data.be + 1 + tab_count;
+	select_data.se = select_data.ss;
+	editor_set_select_block(select_data);
+}
+
+function editor_insert_line_before() {
+	let select_data = editor_get_select_block();
+	let tab_count = 0;
+	for (let i = 0; i < select_data.bt.length; i++) {
+		if (select_data.bt.charAt(i) != '\t') break;
+		tab_count += 1;
+	}
+	select_data.bt = '\t'.repeat(tab_count) + '\n' + select_data.bt;
+	
+	select_data.ss = select_data.bs + tab_count;
+	select_data.se = select_data.ss;
 	editor_set_select_block(select_data);
 }
 
@@ -267,7 +298,7 @@ function editor_insert_link() {
 	let link_target = editor_link_target.value;
 	let link_display = editor_link_display.value;
 	let link_radio = 0;
-	for (var i = 0; i < editor_link_radio.length; i++) {
+	for (let i = 0; i < editor_link_radio.length; i++) {
 		if (editor_link_radio[i].checked) {
 			link_radio = i;
 			break;
@@ -435,8 +466,22 @@ function editor_keydown(event) {
 				editor_insert_tab();
 			}
 		} break;
+		case 13: {
+			if (keydown_ctrl) {
+				event.preventDefault();
+				if (keydown_shift) {
+					editor_insert_line_before();
+				}
+				else {
+					editor_insert_line_after();
+				}
+			}
+		} break;
 		case 16: {
 			keydown_shift = true;
+		} break;
+		case 17: {
+			keydown_ctrl = true;
 		} break;
 	}
 }
@@ -445,6 +490,9 @@ function editor_keyup(event) {
 	switch (event.keyCode) {
 		case 16: {
 			keydown_shift = false;
+		} break;
+		case 17: {
+			keydown_ctrl = false;
 		} break;
 	}
 }

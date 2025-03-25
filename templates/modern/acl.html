@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<script src = "{{ url_for('static', path = 'editor.js') }}"></script>
+
 <form name = "form" method = "post" action = "/acl-save/{{ article.title }}">
 	<div id = "content_title_box">
 		<div class = "content_button_box">
