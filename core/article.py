@@ -167,7 +167,6 @@ class Article:
 	
 	def is_accessable(self, key: str, user: core.user.User | None) -> bool:
 		acl = core.utils.AccessLevel[self.acl_data[key]]
-		print(key, acl)
 		if user == None:
 			return acl <= core.utils.AccessLevel.ANONYMOUS
 		else:
@@ -205,17 +204,20 @@ class Article:
 		content_search_pos = 0
 		content_matches = pattern.finditer(self.plain_text_data)
 		content_len = len(self.plain_text_data)
-		for r in content_matches:
-			r_span = r.span()
-			r_group = r.group()
-			if r_span[0] - content_search_pos > 0:
-				pos = (content_search_pos, r_span[0])
-				content_results.append((False, self.plain_text_data[content_search_pos:r_span[0]], pos))
-			pos = (r_span[0], r_span[1])
-			content_results.append((True, r_group, pos))
-			content_search_pos = r_span[1]
-			priority += 1
-			is_found = True
+		if content_len > 0:
+			for r in content_matches:
+				r_span = r.span()
+				r_group = r.group()
+				if r_span[0] - content_search_pos > 0:
+					pos = (content_search_pos, r_span[0])
+					content_results.append((False, self.plain_text_data[content_search_pos:r_span[0]], pos))
+				pos = (r_span[0], r_span[1])
+				content_results.append((True, r_group, pos))
+				content_search_pos = r_span[1]
+				priority += 1
+				is_found = True
+		else:
+			content_results.append((False, "", (0, 0)))
 		
 		if is_found:
 			if len(self.plain_text_data) - content_search_pos > 0:

@@ -146,6 +146,31 @@ def edit_save(
 	
 	return f"/view/{title}"
 
+@app.get("/acl-view", response_class = fastapi.responses.RedirectResponse)
+@app.get("/acl-view/", response_class = fastapi.responses.RedirectResponse)
+@app.get("/acl-view/{title}", response_class = fastapi.responses.HTMLResponse)
+def view_acl(request: fastapi.Request, title: typing.Optional[str] = None):
+	if title == None:
+		return fastapi.responses.RedirectResponse("/", status_code = 303)
+	
+	article = core.article.Article(title)
+	article.load()
+	
+	user, username = core.user.get_user_from_request(request)
+
+	context: dict[str, typing.Any] = {
+		'request': request,
+		'title': f"View ACL for {title}",
+		'article': article,
+		'settings': core.settings.instance,
+		'user': user,
+		'editor_data': core.editor_data.instance
+	}
+
+	response = templates.TemplateResponse(f"{core.settings.instance.skin}/source_acl.html", context)
+
+	return response
+
 @app.get("/acl", response_class = fastapi.responses.RedirectResponse)
 @app.get("/acl/", response_class = fastapi.responses.RedirectResponse)
 @app.get("/acl/{title}", response_class = fastapi.responses.HTMLResponse)
@@ -159,7 +184,7 @@ def acl(request: fastapi.Request, title: typing.Optional[str] = None):
 
 	can_change_acl = article.is_accessable('acl', user)
 	if not can_change_acl:
-		return fastapi.responses.RedirectResponse(f"/view/{title}")
+		return fastapi.responses.RedirectResponse(f"/acl-view/{title}")
 	
 	context: dict[str, typing.Any] = {
 		'request': request,

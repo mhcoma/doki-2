@@ -39,6 +39,10 @@
 					<button class = "btn btn_content" type = "button" onclick = "location.href = '/acl/{{ article.title }}'">
 						ACL
 					</button>
+				{% else %}
+					<button class = "btn btn_content" type = "button" onclick = "location.href = '/acl-view/{{ article.title }}'">
+						ACL
+					</button>
 				{% endif %}
 			{% endif %}
 		</div>
