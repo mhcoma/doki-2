@@ -393,6 +393,8 @@ $hd_line: 1px solid $hr_color;
 		border: 1px solid $base_color_125;
 		display: block;
 		padding: 16px 16px;
+		white-space: pre-wrap;
+		word-break: break-all;
 	}
 
 	code {

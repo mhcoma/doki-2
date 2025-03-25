@@ -320,6 +320,8 @@ section {
   border: 1px solid rgb(111, 159, 255);
   display: block;
   padding: 16px 16px;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 #content code {
   font-family: "D2Coding", courier, monospace;
