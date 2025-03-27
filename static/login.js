@@ -3,89 +3,87 @@ let password_textbox;
 let hash_a;
 let hash_b;
 
-$(window).on('load', function() {
-	username_textbox = $('#login_username');
-	password_textbox = $('#login_password');
+window.addEventListener('load', function() {
+	username_textbox = document.getElementById('login_username');
+	password_textbox = document.getElementById('login_password');
 	
-	hash_a = $('#hash_a');
-	hash_b = $('#hash_b');
+	hash_a = document.getElementById('hash_a');
+	hash_b = document.getElementById('hash_b');
 
-	username_textbox[0].setCustomValidity('Username is required.');
-	password_textbox[0].setCustomValidity('Password is required.');
+	username_textbox.setCustomValidity('Username is required.');
+	password_textbox.setCustomValidity('Password is required.');
 
-	username_textbox.on(
-		'load change input',
-		function(event) {
-			let val = username_textbox.val();
+	['load', 'change', 'input'].forEach(function(eventtype) {
+		username_textbox.addEventListener(eventtype, function(event) {
+			let val = username_textbox.value;
 			let result = true;
 			if (val === '') {
-				username_textbox[0].setCustomValidity('Username is required.');
+				username_textbox.setCustomValidity('Username is required.');
 				result = false;
 			}
 			else if (val.match(/[\W]/)) {
-				username_textbox[0].setCustomValidity('Only latin alphabets, numbers, and underscores are allowed.');
+				username_textbox.setCustomValidity('Only latin alphabets, numbers, and underscores are allowed.');
 				result = false;
 			}
 			else {
 				let is_user_exist = false;
-				$.ajax(
-					{
-						url: `/is_user_exist/?username=${val}`,
-						dataType: 'json',
-						async: false,
-						success: function(user_data) {
-							is_user_exist = user_data.is_user_exist;
-						}
+				let form = new FormData();
+				form.append('username', val);
+				fetch('/is_user_exist/', {
+					method: 'POST',
+					body: form
+				}).then(function(res) {
+					return res.json();
+				}).then(function(data) {
+					is_user_exist = data.is_user_exist;
+					if (!is_user_exist) {
+						username_textbox.setCustomValidity('Username that does not exist.');
+						result = false;
 					}
-				);
-				if (!is_user_exist) {
-					username_textbox[0].setCustomValidity('Username that does not exist.');
-					result = false;
-				}
+				});
 			}
 			if (result) {
-				username_textbox[0].setCustomValidity('');
+				username_textbox.setCustomValidity('');
 			}
-		}
-	);
+		});
 
-	password_textbox.on(
-		'load change input',
-		function(event) {
-			let val = password_textbox.val();
+		password_textbox.addEventListener(eventtype, function(event) {
+			let val = password_textbox.value;
 			let reversed_val = val.split('').reverse().join('');
 			let hash_a_val = SHA256.createHash("sha256").update(val).digest("hex");
 			let hash_b_val = SHA256.createHash("sha256").update(reversed_val).digest("hex");
 
-			hash_a.val(hash_a_val);
-			hash_b.val(hash_b_val);
+			hash_a.value = hash_a_val;
+			hash_b.value = hash_b_val;
 			
 			let result = true;
 			if (val === '') {
-				password_textbox[0].setCustomValidity('Password is required.');
+				password_textbox.setCustomValidity('Password is required.');
 				result = false;
 			}
 			else {
 				let can_login = false;
-				let username_val = username_textbox.val()
-				$.ajax(
-					{
-						url: `/can_login/?username=${username_val}&hash_a=${hash_a_val}&hash_b=${hash_b_val}`,
-						dataType: 'json',
-						async: false,
-						success: function(user_data) {
-							can_login = user_data.can_login;
-						}
+				let username_val = username_textbox.value;
+				let form = new FormData();
+				form.append('username', username_val);
+				form.append('hash_a', hash_a_val);
+				form.append('hash_b', hash_b_val);
+				fetch('/can_login/', {
+					method: 'POST',
+					body: form
+				}).then(function(res) {
+					return res.json();
+				}).then(function(data) {
+					can_login = data.can_login;
+					if (!can_login) {
+						password_textbox.setCustomValidity('Password does not match.');
+						result = false;
 					}
-				)
-				if (!can_login) {
-					password_textbox[0].setCustomValidity('Password does not match.');
-					result = false;
-				}
+				});
 			}
 			if (result) {
-				password_textbox[0].setCustomValidity('');
+				password_textbox.setCustomValidity('');
 			}
-		}
-	);
+		});
+	});
 });

@@ -4,7 +4,7 @@ var header_menu_box;
 
 var menu_display = false;
 
-$(window).on("load", function() {
+window.addEventListener('load', function() {
 	header_search_bar = document.getElementById('header_search_bar');
 	header_menu_btn = document.getElementById('header_menu_btn');
 	header_menu_box = document.getElementById('header_menu_box');

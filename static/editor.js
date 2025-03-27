@@ -1,16 +1,16 @@
-const editor_insert_position = {
+const EditorInsertPosition = {
 	LEFT: 0,
 	CENTER: 1,
 	RIGHT: 2
 };
-Object.freeze(editor_insert_position);
+Object.freeze(EditorInsertPosition);
 
-const editor_select_again = {
+const EditorSelectAgainType = {
 	NONE: 0,
 	PART: 1,
 	ALL: 2
 };
-Object.freeze(editor_select_again);
+Object.freeze(EditorSelectAgainType);
 
 
 let editor_section_box;
@@ -35,98 +35,88 @@ let editor_fenced_code_language;
 let keydown_shift = false;
 let keydown_ctrl = false;
 
-$(window).on('load', function() {
-	editor_section_box = $('#editor_section_box')[0];
-	editor_link_target = $('#editor_link_target')[0];
-	editor_link_display = $('#editor_link_display')[0];
+window.addEventListener('load', function() {
+	editor_section_box = document.getElementById('editor_section_box');
+	editor_link_target = document.getElementById('editor_link_target')
+	editor_link_display = document.getElementById('editor_link_display')
 
-	editor_link_radio = $('[name = "editor_link_radio"]');
+	editor_link_radio = document.getElementsByName('editor_link_radio');
 
-	editor_image_upload = $('#editor_image_upload');
-	editor_image_url = $('#editor_image_url');
-	editor_image_alt_text = $('#editor_image_alt_text');
-	editor_image_upload.on('change', function() {
-		// editor_image_file_name = editor_image_upload.val();
-		// const file_reader = new FileReader();
-		// file_reader.onload = function(event) {
-		// 	editor_image_url.val(event.target.result);
-		// }
-		// file_reader.readAsDataURL(editor_image_upload[0].files[0]);
-
+	editor_image_upload = document.getElementById('editor_image_upload');
+	editor_image_url = document.getElementById('editor_image_url');
+	editor_image_alt_text = document.getElementById('editor_image_alt_text');
+	editor_image_upload?.addEventListener('change', function() {
 		let form = new FormData();
-		form.append("image_file", editor_image_upload[0].files[0]);
-		$.ajax(
-			{
-				url: `/compress-image/`,
-				type: 'post',
-				data: form,
-				dataType: 'json',
-				async: false,
-				processData : false,
-				contentType : false,
-				success: function(data) {
-					let compressed_image = data.compressed_image
-					console.log(compressed_image)
-					editor_image_url.val(compressed_image);
-				}
-			}
-		);
+		form.append('image_file', editor_image_upload.files[0]);
+		fetch('/compress-image/', {
+			method: 'POST',
+			body: form
+		}).then(function(res) {
+			return res.json();
+		}).then(function(data) {
+			let compressed_image = data.compressed_image;
+			editor_image_url.value = compressed_image;
+		});
 
-		editor_image_upload.val('');
+		editor_image_upload.value = '';
 	});
-	editor_image_radio = $('[name = "editor_image_radio"]');
-	editor_image_size = $('#editor_image_size');
-
-	editor_image_radio.on('change', function(event) {
-		editor_image_size.attr("disabled", editor_image_radio[0].checked);
+	editor_image_radio = document.getElementsByName('editor_image_radio');
+	editor_image_size = document.getElementById('editor_image_size');
+	
+	editor_image_radio?.forEach(function(element) {
+		element.addEventListener('change', function(event) {
+			editor_image_size.disabled = editor_image_radio[0].checked;
+		});
 	});
 
-	editor_table_rows = $('#editor_table_rows');
-	editor_table_columns = $('#editor_table_columns');
-	editor_table_radio = $('[name = "editor_table_radio"]');
+	editor_table_rows = document.getElementById('editor_table_rows');
+	editor_table_columns = document.getElementById('editor_table_columns');
+	editor_table_radio = document.getElementsByName('editor_table_radio');
 
-	editor_table_rows.on('load change input', function(event) {
-		validate_int_input(editor_table_rows);
-	})
-	editor_table_columns.on('load change input', function(event) {
-		validate_int_input(editor_table_columns);
-	})
+	['load', 'change', 'input'].forEach(function(eventtype) {
+		editor_table_rows?.addEventListener(eventtype, function(event) {
+			validate_int_input(editor_table_rows);
+		});
+		editor_table_columns?.addEventListener(eventtype, function(event) {
+			validate_int_input(editor_table_rows);
+		});
+	});
 
-	editor_fenced_code_language = $('[name = "editor_fenced_code_language"]')
+	editor_fenced_code_language = document.getElementsByName('editor_fenced_code_language');
 
-	edit_area = $('#edit_area')[0];
+	edit_area = this.document.getElementById('edit_area');
 });
 
 function validate_int_input(input_obj) {
-	val = input_obj.val();
-	input_obj.val(parseInt(val));
+	val = input_obj.value;
+	input_obj.value = parseInt(val);
 }
 
 function editor_italic() {
 	editor_select_insert_single(
 		'_', 'Italic Text',
-		editor_insert_position.CENTER, editor_select_again.PART
+		EditorInsertPosition.CENTER, EditorSelectAgainType.PART
 	);
 }
 
 function editor_bold() {
 	editor_select_insert_single(
 		'__', 'Bold Text',
-		editor_insert_position.CENTER, editor_select_again.PART
+		EditorInsertPosition.CENTER, EditorSelectAgainType.PART
 	);
 }
 
 function editor_inline_code() {
 	editor_select_insert_single(
 		'`', 'Inline Code',
-		editor_insert_position.CENTER, editor_select_again.PART
+		EditorInsertPosition.CENTER, EditorSelectAgainType.PART
 	);
 }
 
 function editor_blockquote() {
 	editor_select_insert_single(
 		'>', 'Blockquote',
-		editor_insert_position.LEFT, editor_select_again.PART
+		EditorInsertPosition.LEFT, EditorSelectAgainType.PART
 	);
 }
 
@@ -142,14 +132,14 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 	let back_length = token_back.length;
 
 	switch (position) {
-		case editor_insert_position.LEFT: {
+		case EditorInsertPosition.LEFT: {
 			selected = token_front + selected;
 			back_length = 0;
 		} break;
-		case editor_insert_position.CENTER: {
+		case EditorInsertPosition.CENTER: {
 			selected = token_front + selected + token_back;
 		} break;
-		case editor_insert_position.RIGHT: {
+		case EditorInsertPosition.RIGHT: {
 			selected = selected + token_back;
 			front_length = 0;
 		} break;
@@ -159,14 +149,14 @@ function editor_select_insert_pair(token_front, token_back, empty_replace, posit
 	end = start + selected.length;
 
 	switch (select_again) {
-		case editor_select_again.NONE: {
+		case EditorSelectAgainType.NONE: {
 		} break;
-		case editor_select_again.PART: {
+		case EditorSelectAgainType.PART: {
 			edit_area.select();
 			edit_area.selectionStart = start + front_length;
 			edit_area.selectionEnd = end - back_length;
 		} break;
-		case editor_select_again.ALL: {
+		case EditorSelectAgainType.ALL: {
 			edit_area.select();
 			edit_area.selectionStart = start;
 			edit_area.selectionEnd = end;
@@ -329,14 +319,14 @@ function editor_insert_link() {
 
 function editor_extend_image(btn) {
 	editor_extend_box('editor_image', btn);
-	editor_image_url.val("");
+	editor_image_url.value = '';
 }
 
 function editor_insert_image() {
-	let alt_text = editor_image_alt_text.val();
+	let alt_text = editor_image_alt_text.value;
 	if (alt_text == '') alt_text = 'Image';
-	let url_text = editor_image_url.val();
-	let width_text = editor_image_size.val();
+	let url_text = editor_image_url.value;
+	let width_text = editor_image_size.value;
 
 	let img_text;
 
@@ -356,8 +346,8 @@ function editor_insert_image() {
 function editor_insert_fenced_code() {
 	editor_select_insert_pair(
 		'```' + editor_fenced_code_language.val() + '\n', '\n```', 'Fenced Code',
-		editor_insert_position.CENTER,
-		editor_select_again.PART
+		EditorInsertPosition.CENTER,
+		EditorSelectAgainType.PART
 	);
 
 	edit_area.focus();

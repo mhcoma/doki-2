@@ -265,15 +265,24 @@ def search(request: fastapi.Request, query: str = ""):
 	response = templates.TemplateResponse(f"{core.settings.instance.skin}/search.html", context)
 	return response
 
-@app.get("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
-def is_user_exist(request: fastapi.Request, username: str):
+@app.post("/is_user_exist/", response_class = fastapi.responses.HTMLResponse)
+def is_user_exist(
+	request: fastapi.Request,
+	username: str = fastapi.Form()
+):
+# def compress_image(request: fastapi.Request, image_file: fastapi.UploadFile = fastapi.Form()):
 	user = core.user.User(username)
 	result = dict()
 	result['is_user_exist'] = user.is_user_exist()
 	return json.dumps(result)
 
-@app.get("/can_login/", response_class = fastapi.responses.HTMLResponse)
-def can_login(request: fastapi.Request, username: str, hash_a: str, hash_b: str):
+@app.post("/can_login/", response_class = fastapi.responses.HTMLResponse)
+def can_login(
+	request: fastapi.Request,
+	username: str = fastapi.Form(),
+	hash_a: str = fastapi.Form(),
+	hash_b: str = fastapi.Form()
+):
 	user = core.user.User(username)
 	result = dict()
 	result['can_login'] = user.can_login(hash_a, hash_b)
@@ -305,11 +314,10 @@ def login_submit(
 	response: fastapi.Response,
 	request: fastapi.Request,
 	username: str = fastapi.Form(),
-	password: str = fastapi.Form(),
 	hash_a: str = fastapi.Form(),
 	hash_b: str = fastapi.Form(),
 ):
-	user = core.user.User(username)
+	user = core.user.User(username, hash_a, hash_b)
 	result = user.login(hash_a, hash_b, request)
 
 	redirect_url = request.session['referer'] if result else "/login/"
@@ -357,8 +365,6 @@ def join(request: fastapi.Request):
 def join_submit(
 	request: fastapi.Request,
 	username: str = fastapi.Form(),
-	password: str = fastapi.Form(),
-	confirm_password: str = fastapi.Form(),
 	hash_a: str = fastapi.Form(),
 	hash_b: str = fastapi.Form(),
 	email: str = fastapi.Form()
