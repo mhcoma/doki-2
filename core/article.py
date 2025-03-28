@@ -87,9 +87,11 @@ class Article:
 		if os.path.isfile(self.article_filename):
 			if load_type == ArticleLoadType.VIEW:
 				self.article_data = core.utils.load_json_file(self.article_filename)
-				self.history_data = core.utils.load_json_file(self.history_filename)
 				self.acl_data = core.utils.load_json_file(self.acl_filename)
 				self.raw_acl_data = json.dumps(self.acl_data, indent = '\t')
+				
+				if core.settings.instance.history:
+					self.history_data = core.utils.load_json_file(self.history_filename)
 
 				edition = self.article_data['edition']
 				for i in range(edition, -1, -1):
@@ -126,26 +128,36 @@ class Article:
 			self.article_data = {
 				'edition' : 0,
 				'created' : now,
-				'last_updated' : now
 			}
 			self.existence = True
 			if not os.path.isdir(self.directory_name):
 				os.makedirs(self.directory_name)
 		self.article_data['edition'] += 1
+		self.article_data['last_updated'] = now
+		self.article_data['last_editor'] = username
+		edition = self.article_data['edition']
+		core.utils.save_json_file(self.article_data, self.article_filename)
 
-		self.history_data.append(
-			{
-				'edition' : self.article_data['edition'],
-				'editor' : username,
-				'date' : now
-			}
-		)
-
-		raw_data_for_check_redirect = self.raw_data.strip()
+		if core.settings.instance.history:
+			self.history_data.append(
+				{
+					'edition' : edition,
+					'editor' : username,
+					'date' : now
+				}
+			)
+			core.utils.save_json_file(self.history_data, self.history_filename)
+		elif edition > 1:
+			old_md_filename = os.path.join(
+				self.directory_name,
+				f"{edition - 1}.md"
+			)
+			if os.path.isfile(old_md_filename):
+				os.remove(old_md_filename)
 
 		md_filename = os.path.join(
 			self.directory_name,
-			f"{self.article_data['edition']}.md"
+			f"{edition}.md"
 		)
 		md_file = open(md_filename, 'w', encoding = "utf-8")
 		md_file.write(self.raw_data)
@@ -154,9 +166,6 @@ class Article:
 		plain_text_data_file = open(self.plain_text_data_filename, 'w', encoding = "utf-8")
 		plain_text_data_file.write(Article.convert_markdown(self.raw_data, False))
 		plain_text_data_file.close()
-
-		core.utils.save_json_file(self.article_data, self.article_filename)
-		core.utils.save_json_file(self.history_data, self.history_filename)
 
 		self.acl_data = json.loads(self.raw_acl_data)
 		core.utils.save_json_file(self.acl_data, self.acl_filename)

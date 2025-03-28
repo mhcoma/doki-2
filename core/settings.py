@@ -10,6 +10,7 @@ class Setting:
 	wikiname: str
 	skin: str
 	codehilite: str
+	history: bool
 	secret_key: str
 	default_acl: dict[str, str]
 
@@ -43,6 +44,7 @@ class Setting:
 				'mainpage': "MainPage",
 				'skin': "modern",
 				'codehilite': "github-dark",
+				'history': True,
 				'secret_key': secret_key,
 				'default_acl': default_acl
 			}
@@ -55,6 +57,7 @@ class Setting:
 		self.wikiname = settings_data['wikiname']
 		self.skin = settings_data['skin']
 		self.codehilite = settings_data['codehilite']
+		self.history = settings_data['history']
 		self.secret_key = settings_data['secret_key']
 		self.default_acl = settings_data['default_acl']
 
