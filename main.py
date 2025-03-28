@@ -270,7 +270,6 @@ def is_user_exist(
 	request: fastapi.Request,
 	username: str = fastapi.Form()
 ):
-# def compress_image(request: fastapi.Request, image_file: fastapi.UploadFile = fastapi.Form()):
 	user = core.user.User(username)
 	result = dict()
 	result['is_user_exist'] = user.is_user_exist()
