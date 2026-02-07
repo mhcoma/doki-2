@@ -6,8 +6,8 @@ __pycache__/
 
 .github/
 
-.articles/
-index
+articles/
+index/
 serve.py
 Caddyfile
 test.py
