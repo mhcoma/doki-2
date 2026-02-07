@@ -12,3 +12,5 @@ serve.py
 Caddyfile
 test.py
 
+*.css
+*.css.map
