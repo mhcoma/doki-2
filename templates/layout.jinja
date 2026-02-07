@@ -1,0 +1,46 @@
+{% from "macro.jinja" import render_metadata %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			{{ title }}
+		</title>
+		<meta charset = "utf-8">
+		<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+
+		<link rel='stylesheet' href="https://unpkg.com/nprogress@0.2.0/nprogress.css"/>
+		<link rel="stylesheet" href="https://esm.sh/@wooorm/starry-night@3/style/both.css">
+		<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+		<script type="module" src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+		<link rel='stylesheet' href="{{ url_for('static', filename='css/style.css', v=1.0) }}">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	</head>
+	<body
+		hx-boost="true"
+		hx-target="#doki2-main"
+		hx-select="#doki2-main"
+		hx-swap="outerHTML transition:true">
+		<header
+			hx-target="#doki2-main"
+			hx-select="#doki2-main"
+			hx-swap="outerHTML transition:true">
+			<div class="site-center">
+				{% include "header.jinja" %}
+			</div>
+		</header>
+		<main
+			id="doki2-main">
+			<div class="site-center">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</main>
+		<footer>
+			<div class="site-center">
+				footer content
+			</div>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+{% macro render_metadata(data, is_nested=False) %}
+	{% if data is mapping %}
+		<table class="metadata-table {{ 'nested' if is_nested }} ">
+			{% for key, value in data.items() %}
+				<tr>
+					<th><span>{{ key }}</span></th>
+					<td>{{ render_metadata(value, True) }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% elif data is iterable and data is not string %}
+		<table class="metadata-table {{ 'nested' if is_nested }}">
+			{% for item in data %}
+				<tr>
+					<th><span>{{ loop.index }}</span></th>
+					<td>{{ render_metadata(item, True) }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<span>{{ data }}</span>
+	{% endif %}
+{% endmacro %}

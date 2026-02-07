@@ -1,0 +1,43 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Caddy",
+			"type": "shell",
+			"command": "caddy run",
+			"isBackground": true,
+			"problemMatcher": {
+                "pattern": [ { "regexp": ".", "file": 1, "location": 2, "message": 3 } ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*Caddy.*$",
+                    "endsPattern": "^.*admin endpoint.*$"
+                }
+            },
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false,
+				"close": true
+			}
+		},
+		{
+			"label": "Stop Caddy",
+			"type": "shell",
+			// "command": "taskkill /F /IM caddy.exe /T",
+			"command": "caddy stop",
+			"presentation": {
+				"reveal": "never",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false,
+				"close": true
+			}
+		}
+	]
+}

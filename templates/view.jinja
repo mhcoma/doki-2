@@ -1,0 +1,42 @@
+{% extends "layout.jinja" %}
+{% block content %}
+<article>
+	<div id="doki2-titlebox">
+		<h1 id="doki2-titlebox-title">
+			{{ article.title }}
+		</h1>
+		<nav id="doki2-titlebox-nav">
+			{%- if perm.is_editable -%}
+				<a href="{{ url_for('edit', title=article.title) }}"
+					class="doki2-titlebox-nav-button">
+					{%- if article.existence -%}
+						Edit
+					{%- else -%}
+						Create
+					{%- endif -%}
+				</a>
+			{%- elif article.existense and perm.is_viewable -%}
+				<a href="#"
+					class="doki2-titlebox-nav-button">View Source</a>
+			{%- endif -%}
+			{%- if article.existence and perm.is_viewable -%}
+				<a href="#"
+					class="doki2-titlebox-nav-button">Discuss</a>{#- -#}
+				<a href="#"
+					class="doki2-titlebox-nav-button">History</a>
+				{%- if perm.is_deletable -%}
+					<a href="#"
+						class="doki2-titlebox-nav-button">Delete</a>
+				{%- endif -%}
+			{%- endif -%}
+		</nav>
+	</div>
+	<hr>
+	{{ render_metadata(article.metadata) }}
+	{% if redirected_from %}
+		Redirected from <a href="{{ url_for('view', title=redirected_from, noredirect=1) }}">{{ redirected_from }}</a>
+		<hr>
+	{% endif %}
+	{{ article.html }}
+</article>
+{% endblock content %}

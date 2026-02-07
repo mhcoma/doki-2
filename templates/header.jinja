@@ -1,0 +1,15 @@
+<a href="{{ url_for('view', title='test')}}">Main Page</a>
+<input type="search"
+	id="doki2-header-searchbar-text"
+	name="query"
+	hx-get="/search-go"
+	hx-trigger="search"
+	hx-on::after-request="this.value = ''; this.blur();">
+<a href="#"
+	hx-get="/go"
+	hx-include="#doki2-header-searchbar-text"
+	hx-on::after-request="document.getElementById('doki2-header-searchbar-text').value = ''; this.blur();">Go</a>
+<a href="#"
+	hx-get="/search"
+	hx-include="#doki2-header-searchbar-text"
+	hx-on::after-request="document.getElementById('doki2-header-searchbar-text').value = ''; this.blur();">Search</a>

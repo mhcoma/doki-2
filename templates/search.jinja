@@ -1,0 +1,25 @@
+{% extends "layout.jinja" %}
+{% block content %}
+<h1>
+	Search - {{ search_result.query_text }}
+</h1>
+<hr>
+{% for item in search_result.items %}
+	<section>
+		<h2>
+			<a href="{{ url_for('view', title=item.title) }}">{{ item.title_snippet }}</a>
+		</h2>
+		{{ item.body_snippet }}
+	</section>
+	<hr>
+{% endfor %}
+
+<nav>
+	<a href="{{ url_for('search', query=search_result.query_text, page=None) }}">First</a>
+	<a href="{{ url_for('search', query=search_result.query_text, page=search_result.current_page - 1) }}">Prev</a>
+
+	<a href="{{ url_for('search', query=search_result.query_text, page=search_result.current_page + 1) }}">Next</a>
+	<a href="{{ url_for('search', query=search_result.query_text, page=search_result.total_pages) }}">Last</a>
+</nav>
+
+{% endblock content %}

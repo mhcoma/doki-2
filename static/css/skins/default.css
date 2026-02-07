@@ -1,0 +1,31 @@
+:root {
+  color: rgb(0, 0, 0);
+  --doki2-link-fg-color: rgb(56, 112, 224);
+  --doki2-link-fg-color-invalid: rgb(224, 56, 112);
+  --doki2-link-fg-color-hover: rgb(255, 255, 255);
+  --doki2-bg-color-l2: rgb(255, 255, 255);
+  --doki2-bg-color-l1: rgb(249.3333333333, 249.3333333333, 249.3333333333);
+  --doki2-bg-color-l0: rgb(242.6666666667, 242.6666666667, 242.6666666667);
+  --doki2-border-color: rgb(202.6666666667, 202.6666666667, 202.6666666667);
+  --doki2-btn-bg-color: rgb(252.6666666667, 252.6666666667, 252.6666666667);
+  --doki2-btn-bg-color-hover: rgb(237.3333333333, 241.3333333333, 249.3333333333);
+  --doki2-btn-border-color: rgb(202.6666666667, 202.6666666667, 202.6666666667);
+  --doki2-btn-border-color-divider: rgb(202.6666666667, 202.6666666667, 202.6666666667);
+  --doki2-btn-radius: 0.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: rgb(229.3333333333, 229.3333333333, 229.3333333333);
+    --doki2-link-fg-color: rgb(112, 160, 255);
+    --doki2-link-fg-color-invalid: rgb(255, 112, 160);
+    --doki2-link-fg-color-hover: rgb(18.6666666667, 18.6666666667, 18.6666666667);
+    --doki2-bg-color-l2: rgb(18.6666666667, 18.6666666667, 18.6666666667);
+    --doki2-bg-color-l1: rgb(9.3333333333, 9.3333333333, 9.3333333333);
+    --doki2-bg-color-l0: rgb(0, 0, 0);
+    --doki2-border-color: rgb(74.6666666667, 74.6666666667, 74.6666666667);
+    --doki2-btn-bg-color: rgb(37.3333333333, 37.3333333333, 37.3333333333);
+    --doki2-btn-bg-color-hover: rgb(101.3333333333, 61.3333333333, 61.3333333333);
+    --doki2-btn-border-color: rgb(74.6666666667, 74.6666666667, 74.6666666667);
+    --doki2-btn-border-color-divider: rgb(74.6666666667, 74.6666666667, 74.6666666667);
+  }
+}/*# sourceMappingURL=default.css.map */

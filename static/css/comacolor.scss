@@ -1,0 +1,150 @@
+@use "sass:math";
+@use "sass:list";
+
+@function lerp-val($start, $end, $lerp-amount) {
+	@return $start + ($end - $start) * $lerp-amount;
+}
+
+@function lerp-color($color-a, $color-b, $lerp-amount) {
+	$r: lerp-val(list.nth($color-a, 1), list.nth($color-b, 1), $lerp-amount);
+	$g: lerp-val(list.nth($color-a, 2), list.nth($color-b, 2), $lerp-amount);
+	$b: lerp-val(list.nth($color-a, 3), list.nth($color-b, 3), $lerp-amount);
+	@return ($r, $g, $b);
+}
+
+@function convert-level-to-energy($level) {
+	@if $level < 0 {
+		@return 0;
+	}
+	@else if $level <= 1.0 {
+		@return $level * 448;
+	}
+	@else if $level <= 2.0 {
+		@return ($level - 1.0) * 320 + 448;
+	}
+	@else {
+		@return 768;
+	}
+}
+
+@function convert-energy-to-level($energy) {
+	@if $energy < 0.0 {
+		@return 0.0;
+	}
+	@else if $energy <= 448.0 {
+		@return math.div($energy, 448.0);
+	}
+	@else if $energy <= 768.0 {
+		@return math.div($energy - 448.0, 320.0) + 1.0;
+	}
+	@else {
+		@return 2.0;
+	}
+}
+
+@function get-normalized-pattern($angle) {
+	$angle: $angle % 360;
+	$sector: math.floor(math.div($angle, 60));
+	$t: math.div($angle % 60, 60);
+
+	@if $sector == 0 {
+		@return (1.0, $t, 0.0);
+	}
+	@else if $sector == 1 {
+		@return (1.0 - $t, 1.0, 0.0);
+	}
+	@else if $sector == 2 {
+		@return (0.0, 1.0, $t);
+	}
+	@else if $sector == 3 {
+		@return (0.0, 1.0 - $t, 1.0);
+	}
+	@else if $sector == 4 {
+		@return ($t, 0.0, 1.0);
+	}
+	@else {
+		@return (1.0, 0.0, 1.0 - $t);
+	}
+}
+
+@function convert-angle-to-ratio($angle) {
+	$pattern: get-normalized-pattern($angle);
+	$pattern_sum: list.nth($pattern, 1) + list.nth($pattern, 2) + list.nth($pattern, 3);
+	
+	$target-energy: 448.0;
+	$max-val: 256.0;
+
+	@if $pattern_sum == 0 { $sum-p: 1; }
+	$gain: math.div($target-energy, $pattern_sum);
+	$lightness: 0.0;
+
+	@if $gain > $max-val {
+		$denom: 3.0 - $pattern_sum;
+		@if math.abs($denom) < 0.000001 {
+			$lightness: math.div($target-energy, 3.0);
+			$gain: 0;
+		}
+		@else {
+			$lightness: math.div($target-energy - $max-val * $pattern_sum, $denom);
+			$gain: $max-val - $lightness;
+		}
+	}
+
+	$r: math.div($lightness + $gain * list.nth($pattern, 1), 448.0);
+	$g: math.div($lightness + $gain * list.nth($pattern, 2), 448.0);
+	$b: math.div($lightness + $gain * list.nth($pattern, 3), 448.0);
+
+	@return ($r, $g, $b);
+}
+
+@function get-exceed-level($ratio) {
+	$max-channel: math.max(list.nth($ratio, 1), list.nth($ratio, 2), list.nth($ratio, 3));
+	$current-max: $max-channel * 448.0;
+	@if $current-max == 0 { @return 2.0; }
+	$scaling-ratio: math.div(256.0, $current-max);
+	$pattern_sum: $scaling-ratio * 448.0;
+	@return convert-energy-to-level($pattern_sum);
+}
+
+@function color($level, $angle, $purity) {
+	$ratio: convert-angle-to-ratio($angle);
+	$energy: convert-level-to_energy($level);
+	$exceed-level: get-exceed-level($ratio);
+	$pure-color: (0, 0, 0);
+
+	@if $level <= $exceed-level {
+		$pure-color: (
+			list.nth($ratio, 1) * $energy,
+			list.nth($ratio, 2) * $energy,
+			list.nth($ratio, 3) * $energy
+		);
+	} @else {
+		$exceed-energy: convert-level-to-energy($exceed-level);
+		$exceed-color: (
+			list.nth($ratio, 1) * $exceed-energy,
+			list.nth($ratio, 2) * $exceed-energy,
+			list.nth($ratio, 3) * $exceed-energy
+		);
+		$max-color: (256, 256, 256);
+		
+		$exceed-range: 2.0 - $exceed-level;
+		@if $exceed-range < 0.000001 {
+			$exceed-range: 0.000001;
+		}
+		
+		$lerp-amount: math.div($level - $exceed-level, $exceed-range);
+		$pure-color: lerp-color($exceed-color, $max-color, $lerp-amount);
+	}
+
+	$grey-val: math.div($energy, 3.0);
+	$grey-color: ($grey-val, $grey-val, $grey-val);
+	
+	$final-color: lerp-color($grey-color, $pure-color, $purity);
+
+	@return rgb(
+		list.nth($final-color, 1),
+		list.nth($final-color, 2),
+		list.nth($final-color, 3)
+	);
+	// @return $pure-color;
+}

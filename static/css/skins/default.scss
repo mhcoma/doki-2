@@ -1,0 +1,38 @@
+@use "../comacolor" as cc;
+
+:root {
+	color: #{cc.color(0, 0, 0)};
+	--doki2-link-fg-color: #{cc.color(0.875, 220, 1.0)};
+	--doki2-link-fg-color-invalid: #{cc.color(0.875, 340, 1.0)};
+	--doki2-link-fg-color-hover: #{cc.color(2, 0, 0)};
+
+	--doki2-bg-color-l2: #{cc.color(2, 0, 0)};
+	--doki2-bg-color-l1: #{cc.color(1.9375, 0, 0)};
+	--doki2-bg-color-l0: #{cc.color(1.875, 0, 0)};
+
+	--doki2-border-color: #{cc.color(1.5, 0, 0)};
+
+	--doki2-btn-bg-color: #{cc.color(1.96875, 0, 0)};
+	--doki2-btn-bg-color-hover: #{cc.color(1.875, 220, 0.5)};
+	--doki2-btn-border-color: #{cc.color(1.5, 0, 0)};
+	--doki2-btn-border-color-divider: #{cc.color(1.5, 0, 0)};
+	--doki2-btn-radius: 0.5rem;
+
+	@media (prefers-color-scheme: dark) {
+		color: #{cc.color(1.75, 0, 0)};
+		--doki2-link-fg-color: #{cc.color(1.25, 220, 1.0)};
+		--doki2-link-fg-color-invalid: #{cc.color(1.25, 340, 1.0)};
+		--doki2-link-fg-color-hover: #{cc.color(0.125, 0, 0)};
+
+		--doki2-bg-color-l2: #{cc.color(0.125, 0, 0)};
+		--doki2-bg-color-l1: #{cc.color(0.0625, 0, 0)};
+		--doki2-bg-color-l0: #{cc.color(0, 0, 0)};
+
+		--doki2-border-color: #{cc.color(0.5, 0, 0)};
+
+		--doki2-btn-bg-color: #{cc.color(0.25, 0, 0)};
+		--doki2-btn-bg-color-hover: #{cc.color(0.5, 0, 0.5)};
+		--doki2-btn-border-color: #{cc.color(0.5, 0, 0)};
+		--doki2-btn-border-color-divider: #{cc.color(0.5, 0, 0)};
+	}
+}
